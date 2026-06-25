@@ -1,0 +1,31 @@
+# ===========================================================
+# SBS Green Seeds — configuração de publicação (Netlify)
+# Site estático. URLs amigáveis para os três sistemas.
+# ===========================================================
+
+[build]
+  publish = "."
+
+# URLs amigáveis (atalhos) → arquivos reais
+[[redirects]]
+  from = "/vendedor"
+  to = "/SBS Portal do Vendedor.html"
+  status = 200
+
+[[redirects]]
+  from = "/painel"
+  to = "/SBS Painel Gerencial.html"
+  status = 200
+
+[[redirects]]
+  from = "/ti"
+  to = "/SBS Painel T.I.html"
+  status = 200
+
+# cabeçalhos de segurança básicos
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0B6B61">
+<title>SBS Green Seeds · Sistemas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<template id="__bundler_thumbnail" data-bg-color="#0B6B61">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#0B6B61"/>
+    <rect x="430" y="250" width="150" height="300" rx="34" fill="#6FA331"/>
+    <rect x="620" y="250" width="150" height="140" rx="20" fill="#fff"/>
+    <rect x="620" y="410" width="150" height="140" rx="20" fill="#3CC7B8"/>
+  </svg>
+</template>
+<style>
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:"Plus Jakarta Sans",system-ui,sans-serif; background:#0B3D38; color:#0e1f1b;
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px;
+    background-image:radial-gradient(circle at 20% 10%, #155049 0, #0B3D38 55%); }
+  .wrap{ width:100%; max-width:980px; }
+  .head{ text-align:center; margin-bottom:38px; color:#fff; }
+  .logo{ height:46px; margin-bottom:22px; }
+  .head h1{ font-size:28px; font-weight:800; letter-spacing:-.01em; }
+  .head p{ font-size:15px; color:#9fd3c9; margin-top:8px; font-weight:500; }
+  .grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  .card{ background:#fff; border-radius:20px; padding:26px 24px; text-decoration:none; color:inherit;
+    display:flex; flex-direction:column; gap:14px; transition:transform .16s, box-shadow .16s;
+    box-shadow:0 10px 30px rgba(0,0,0,.18); border:1px solid rgba(0,0,0,.04); }
+  .card:hover{ transform:translateY(-4px); box-shadow:0 18px 44px rgba(0,0,0,.26); }
+  .ic{ width:52px; height:52px; border-radius:14px; display:grid; place-items:center; color:#fff; }
+  .ic svg{ width:26px; height:26px; }
+  .card h2{ font-size:18px; font-weight:800; }
+  .card p{ font-size:13.5px; color:#5b6b65; line-height:1.5; flex:1; }
+  .go{ font-size:13px; font-weight:800; color:#0B6B61; display:inline-flex; align-items:center; gap:6px; }
+  .v{ background:#6FA331; }
+  .p{ background:#0B6B61; }
+  .t{ background:#2A4A7F; }
+  .foot{ text-align:center; margin-top:30px; color:#7fb8ad; font-size:12.5px; }
+  @media(max-width:780px){ .grid{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <img class="logo" src="logo-sbs-white.png" alt="SBS Green Seeds">
+      <h1>Sistemas SBS Green Seeds</h1>
+      <p>Selecione o ambiente que deseja acessar</p>
+    </div>
+    <div class="grid">
+      <a class="card" href="SBS Portal do Vendedor.html">
+        <span class="ic v"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></span>
+        <h2>Portal do Vendedor</h2>
+        <p>App da força de vendas: pedidos, preços, visitas, reclamações, frete e treinamentos.</p>
+        <span class="go">Acessar →</span>
+      </a>
+      <a class="card" href="SBS Painel Gerencial.html">
+        <span class="ic p"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="13" y="6" width="3" height="12"/></svg></span>
+        <h2>Painel Gerencial</h2>
+        <p>Gestão comercial: indicadores, aprovações, conteúdo do app e dados recebidos da equipe.</p>
+        <span class="go">Acessar →</span>
+      </a>
+      <a class="card" href="SBS Painel T.I.html">
+        <span class="ic t"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v1a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3"/><path d="M5 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3"/><circle cx="12" cy="18" r="3"/></svg></span>
+        <h2>Painel de T.I.</h2>
+        <p>Tecnologia: liberação de features, GMud (gestão de mudanças) e versões do sistema.</p>
+        <span class="go">Acessar →</span>
+      </a>
+    </div>
+    <div class="foot">SBS Green Seeds · acesso restrito · governança SBS</div>
+  </div>
+</body>
+</html>

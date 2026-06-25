@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SBS Green Seeds · Painel Gerencial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="panel.css?v=14">
+<template id="__bundler_thumbnail" data-bg-color="#0B6B61">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#0B6B61"/>
+    <rect x="360" y="300" width="200" height="200" rx="22" fill="#10B0A0"/>
+    <rect x="640" y="300" width="200" height="90" rx="14" fill="#fff"/>
+    <rect x="640" y="410" width="200" height="90" rx="14" fill="#3CC7B8"/>
+  </svg>
+</template>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div class="login" id="login">
+    <div class="login-card">
+      <div class="login-logo"><img src="logo-sbs-white.png" alt="SBS Green Seeds"></div>
+      <h2>Painel Gerencial</h2>
+      <p class="sub">Administração do Portal do Vendedor</p>
+      <form id="login-form" novalidate>
+        <div class="fld"><label>Usuário</label>
+          <input id="lg-email" type="text" autocapitalize="none" spellcheck="false" placeholder="primeiro nome"></div>
+        <div class="fld"><label>Senha</label>
+          <input id="lg-pass" type="password" placeholder="Sua senha"></div>
+        <div class="err" id="lg-err"></div>
+        <button class="btn" type="submit">Entrar no painel</button>
+      </form>
+      <div class="login-foot"><i data-lucide="shield-check"></i> Acesso restrito · Governança SBS</div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div class="app hidden" id="app">
+    <!-- sidebar -->
+    <aside class="sidebar">
+      <div class="sb-logo">
+        <span class="lc"><img src="logo-sbs-white.png" alt="SBS"></span>
+        <span class="lt">Painel Gerencial<small>SBS Green Seeds</small></span>
+      </div>
+      <nav class="sb-nav" id="nav"></nav>
+      <div class="sb-foot">
+        <div class="sb-user">
+          <div class="av" id="sb-av">AD</div>
+          <div style="min-width:0"><div class="un" id="sb-name">Admin</div><div class="ur" id="sb-role">Administrador</div></div>
+          <span class="sb-logout" id="logout" title="Sair"><i data-lucide="log-out"></i></span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- main -->
+    <div class="main">
+      <header class="topbar">
+        <div><h1 id="pg-title">Visão Geral</h1><div class="crumb" id="pg-crumb">Painel · Visão Geral</div></div>
+        <div class="spacer"></div>
+        <div class="search-top"><i data-lucide="search"></i><input id="top-search" placeholder="Buscar..."></div>
+      </header>
+      <main class="content" id="content"></main>
+    </div>
+  </div>
+
+  <!-- side drawer (detalhe) -->
+  <div class="scrim" id="scrim"></div>
+  <aside class="side" id="side">
+    <div class="side-head" id="side-head"></div>
+    <div class="side-body" id="side-body"></div>
+    <div class="side-foot" id="side-foot"></div>
+  </aside>
+
+  <!-- modal (forms) -->
+  <div class="modal-scrim" id="modal-scrim">
+    <div class="modal">
+      <div class="modal-head"><h3 id="modal-title">Título</h3><span class="btn-ic" id="modal-x"><i data-lucide="x"></i></span></div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-foot" id="modal-foot"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="auth-users.js"></script>
+  <script src="sbs-org.js"></script>
+  <script src="data.js"></script>
+  <script src="precos-data.js"></script>
+  <script src="drive-util.js"></script>
+  <script src="pedidos-data.js"></script>
+  <script src="sbs-store.js"></script>
+  <script src="sbs-config.js"></script>
+  <script src="sbs-cloud.js"></script>
+  <script src="panel-core.js"></script>
+  <script src="panel-modules.js"></script>
+  <script src="panel-modules2.js"></script>
+  <script src="panel-boot.js"></script>
+</body>
+</html>

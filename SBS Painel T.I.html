@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SBS Green Seeds · Painel de T.I.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="panel.css?v=14">
+<template id="__bundler_thumbnail" data-bg-color="#1B2A4A">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#1B2A4A"/>
+    <rect x="380" y="330" width="180" height="92" rx="46" fill="#3CC7B8"/>
+    <circle cx="520" cy="376" r="32" fill="#fff"/>
+    <rect x="620" y="346" width="200" height="26" rx="13" fill="#5B7BB4"/>
+    <rect x="620" y="392" width="140" height="26" rx="13" fill="#34507F"/>
+  </svg>
+</template>
+<style>
+  /* ===== Painel T.I. — identidade visual própria (azul tecnologia) ===== */
+  .app{ --brand:#2A4A7F; --brand-2:#3CC7B8; }
+  .sidebar{ background:#1B2A4A; }
+  .sb-logo .lt small{ color:#9DB2D8; }
+  .nav-item.active{ background:rgba(60,199,184,.16); color:#fff; }
+  .nav-item.active i{ color:var(--brand-2); }
+  .login-card .btn, .app .btn{ background:#2A4A7F; }
+
+  .ti-kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:16px; margin-bottom:22px; }
+  .ti-kpi{ display:flex; gap:13px; align-items:center; background:var(--card,#fff); border:1px solid var(--line,#e6ebe9); border-radius:16px; padding:16px 18px; }
+  .ti-kpi-ic{ width:42px; height:42px; border-radius:12px; display:grid; place-items:center; background:#eef2f9; color:#2A4A7F; flex:0 0 auto; }
+  .ti-kpi-ic i{ width:21px; height:21px; }
+  .ti-kpi.ok .ti-kpi-ic{ background:#e6f7f3; color:#0B8A78; }
+  .ti-kpi.warn .ti-kpi-ic{ background:#fdeede; color:#b46b16; }
+  .ti-kpi.info .ti-kpi-ic{ background:#e9f0fb; color:#2A4A7F; }
+  .ti-kpi.brand .ti-kpi-ic{ background:#2A4A7F; color:#fff; }
+  .ti-kpi-v{ font-size:24px; font-weight:800; color:var(--ink,#16201a); line-height:1.1; }
+  .ti-kpi-l{ font-size:12px; color:var(--muted,#6b7a74); margin-top:2px; }
+
+  .ti-cols{ display:grid; grid-template-columns:1.4fr 1fr; gap:18px; }
+  .ti-panel{ background:var(--card,#fff); border:1px solid var(--line,#e6ebe9); border-radius:16px; padding:18px; }
+  .ti-panel-h{ font-size:13px; font-weight:800; color:var(--ink,#16201a); display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+  .ti-panel-h i{ width:17px; height:17px; color:#2A4A7F; }
+  .ti-row{ display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--line,#eef1f0); cursor:pointer; }
+  .ti-row:last-child{ border-bottom:0; }
+  .ti-row-main{ flex:1; min-width:0; }
+  .ti-row-t{ font-size:13.5px; font-weight:700; color:var(--ink,#16201a); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ti-row-s{ font-size:11.5px; color:var(--muted,#6b7a74); margin-top:1px; }
+
+  .ti-note{ font-size:12.5px; border-radius:12px; padding:11px 13px; margin-bottom:10px; line-height:1.45; }
+  .ti-note.ok{ background:#e6f7f3; color:#0B6B5E; }
+  .ti-note.warn{ background:#fdeede; color:#9a5a12; }
+  .ti-note.info{ background:#eef2f9; color:#2A4A7F; display:flex; gap:8px; align-items:flex-start; }
+  .ti-note.run{ background:#e9f0fb; color:#2A4A7F; }
+  .ti-note i{ width:16px; height:16px; flex:0 0 auto; margin-top:1px; }
+  .ti-quick{ display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
+
+  .ti-btn{ display:inline-flex; align-items:center; gap:7px; border:1px solid var(--line,#dce3e0); background:var(--card,#fff); color:var(--ink,#16201a); border-radius:10px; padding:9px 14px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; }
+  .ti-btn i{ width:15px; height:15px; }
+  .ti-btn:hover{ border-color:#c3cdc8; }
+  .ti-btn.primary{ background:#2A4A7F; border-color:#2A4A7F; color:#fff; }
+  .ti-btn.primary:hover{ background:#22406f; }
+  .ti-btn.danger{ background:#fff; border-color:#e9c4c4; color:#b3261e; }
+
+  .ti-toolbar{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; }
+  .ti-sub{ font-size:12.5px; color:var(--muted,#6b7a74); font-weight:600; }
+
+  /* features */
+  .ti-group{ margin-bottom:18px; }
+  .ti-group-h{ font-size:11.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:#2A4A7F; margin:0 2px 9px; }
+  .ti-feat{ display:flex; align-items:center; gap:13px; background:var(--card,#fff); border:1px solid var(--line,#e6ebe9); border-radius:13px; padding:13px 16px; margin-bottom:9px; }
+  .ti-feat.is-off{ background:#fafbfc; }
+  .ti-feat.is-off .ti-feat-ic{ background:#f0f2f4; color:#9aa6a1; }
+  .ti-feat-ic{ width:38px; height:38px; border-radius:10px; background:#eef2f9; color:#2A4A7F; display:grid; place-items:center; flex:0 0 auto; }
+  .ti-feat-ic i{ width:18px; height:18px; }
+  .ti-feat-main{ flex:1; min-width:0; }
+  .ti-feat-t{ font-size:14px; font-weight:700; color:var(--ink,#16201a); }
+  .ti-feat-s{ font-size:11.5px; color:var(--muted,#6b7a74); margin-top:2px; }
+
+  .ti-switch{ position:relative; width:46px; height:26px; flex:0 0 auto; cursor:pointer; }
+  .ti-switch input{ opacity:0; width:0; height:0; position:absolute; }
+  .ti-slider{ position:absolute; inset:0; background:#cfd6dc; border-radius:20px; transition:.18s; }
+  .ti-slider::before{ content:""; position:absolute; width:20px; height:20px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.18s; box-shadow:0 1px 3px rgba(0,0,0,.25); }
+  .ti-switch input:checked + .ti-slider{ background:#1F9E8C; }
+  .ti-switch input:checked + .ti-slider::before{ transform:translateX(20px); }
+
+  /* gmud cards */
+  .ti-cards{ display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
+  .ti-card{ background:var(--card,#fff); border:1px solid var(--line,#e6ebe9); border-radius:15px; padding:16px; cursor:pointer; transition:.15s; }
+  .ti-card:hover{ border-color:#bcc9e0; box-shadow:0 6px 18px rgba(27,42,74,.08); transform:translateY(-1px); }
+  .ti-card-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:9px; }
+  .ti-num{ font-size:12px; font-weight:800; color:#2A4A7F; letter-spacing:.03em; }
+  .ti-card-t{ font-size:15px; font-weight:800; color:var(--ink,#16201a); line-height:1.3; margin-bottom:10px; }
+  .ti-card-meta{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
+  .ti-card-x{ display:flex; align-items:center; gap:7px; font-size:12px; color:var(--muted,#6b7a74); margin-top:5px; }
+  .ti-card-x i{ width:14px; height:14px; flex:0 0 auto; }
+
+  .ti-tag{ display:inline-block; font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; background:#eef2f9; color:#2A4A7F; }
+  .ti-tag.r-baixo{ background:#e6f7f3; color:#0B8A78; }
+  .ti-tag.r-medio{ background:#fdeede; color:#b46b16; }
+  .ti-tag.r-alto{ background:#fde8e6; color:#b3261e; }
+
+  .ti-badge{ font-size:11px; font-weight:800; padding:4px 10px; border-radius:20px; white-space:nowrap; }
+  .s-draft{ background:#eef1f0; color:#69756f; }
+  .s-sched{ background:#e9f0fb; color:#2A4A7F; }
+  .s-run{ background:#fdeede; color:#b46b16; }
+  .s-done{ background:#e6f7f3; color:#0B8A78; }
+  .s-cancel{ background:#fde8e6; color:#b3261e; }
+
+  .ti-empty{ text-align:center; color:var(--muted,#6b7a74); font-size:13px; padding:18px; }
+  .ti-empty.big{ display:flex; flex-direction:column; align-items:center; gap:12px; padding:54px 18px; }
+  .ti-empty.big i{ width:38px; height:38px; color:#bcc9e0; }
+
+  /* form */
+  .ti-form{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .ti-fld{ display:flex; flex-direction:column; gap:6px; }
+  .ti-fld.full{ grid-column:1 / -1; }
+  .ti-fld label{ font-size:12px; font-weight:700; color:var(--ink-2,#3a463f); }
+  .ti-fld input, .ti-fld select, .ti-fld textarea{ font-family:inherit; font-size:14px; border:1.5px solid var(--line,#dce3e0); border-radius:10px; padding:10px 12px; color:var(--ink,#16201a); background:#fff; width:100%; }
+  .ti-fld textarea{ min-height:74px; resize:vertical; }
+  .ti-fld input:focus, .ti-fld select:focus, .ti-fld textarea:focus{ outline:none; border-color:#2A4A7F; }
+  .ti-chks{ display:grid; grid-template-columns:1fr 1fr; gap:6px 14px; max-height:180px; overflow-y:auto; padding:4px 2px; }
+  .ti-chk{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink,#16201a); cursor:pointer; }
+  .ti-chk input{ width:16px; height:16px; accent-color:#2A4A7F; }
+
+  /* side detail */
+  .side-eyebrow{ font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:#2A4A7F; margin-bottom:4px; }
+  .ti-kv{ margin-bottom:14px; }
+  .ti-kv .k{ font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:var(--muted,#8b968f); margin-bottom:4px; }
+  .ti-kv .v{ font-size:14px; color:var(--ink,#16201a); line-height:1.5; }
+  .ti-hist{ font-size:12px; color:var(--muted,#6b7a74); padding:3px 0; }
+
+  .ti-steps{ display:flex; align-items:center; margin-bottom:20px; }
+  .ti-step{ display:flex; flex-direction:column; align-items:center; gap:5px; font-size:10.5px; font-weight:700; color:#9aa6a1; flex:1; }
+  .ti-step span{ width:26px; height:26px; border-radius:50%; background:#eef1f0; color:#9aa6a1; display:grid; place-items:center; font-size:12px; }
+  .ti-step.on{ color:#0B8A78; }
+  .ti-step.on span{ background:#1F9E8C; color:#fff; }
+  .ti-step.cx span{ background:#fde8e6; color:#b3261e; }
+  .ti-step-line{ height:2px; background:#e6ebe9; flex:1; margin:0 -4px; position:relative; top:-9px; }
+
+  .ti-version{ background:#1B2A4A; color:#fff; border-radius:16px; padding:22px 24px; margin-bottom:22px; }
+  .ti-version-v{ font-size:32px; font-weight:800; }
+  .ti-version-l{ font-size:12.5px; color:#9DB2D8; margin-top:3px; }
+  .ti-timeline{ position:relative; padding-left:8px; }
+  .ti-tl{ display:flex; gap:14px; padding-bottom:18px; position:relative; }
+  .ti-tl:not(:last-child)::before{ content:""; position:absolute; left:5px; top:14px; bottom:-4px; width:2px; background:#e1e7ec; }
+  .ti-tl-dot{ width:12px; height:12px; border-radius:50%; background:#2A4A7F; border:2px solid #fff; box-shadow:0 0 0 2px #2A4A7F; flex:0 0 auto; margin-top:3px; z-index:1; }
+  .ti-tl-top{ display:flex; align-items:center; gap:8px; margin-bottom:3px; }
+  .ti-tl-v{ font-size:13px; font-weight:800; color:#2A4A7F; }
+  .ti-tl-num{ font-size:11px; color:var(--muted,#8b968f); font-weight:700; }
+  .ti-tl-t{ font-size:14.5px; font-weight:700; color:var(--ink,#16201a); }
+  .ti-tl-d{ font-size:12.5px; color:var(--muted,#6b7a74); margin-top:3px; line-height:1.45; }
+  .ti-tl-x{ font-size:11.5px; color:var(--muted,#8b968f); margin-top:5px; }
+
+  @media (max-width:900px){ .ti-kpis{ grid-template-columns:1fr 1fr; } .ti-cols{ grid-template-columns:1fr; } .ti-form{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div class="login" id="login">
+    <div class="login-card">
+      <div class="login-logo"><img src="logo-sbs-white.png" alt="SBS Green Seeds"></div>
+      <h2>Painel de T.I.</h2>
+      <p class="sub">Tecnologia · Liberação de Features & GMud</p>
+      <form id="login-form" novalidate>
+        <div class="fld"><label>Usuário</label>
+          <input id="lg-email" type="text" autocapitalize="none" spellcheck="false" placeholder="primeiro nome"></div>
+        <div class="fld"><label>Senha</label>
+          <input id="lg-pass" type="password" placeholder="Sua senha"></div>
+        <div class="err" id="lg-err"></div>
+        <button class="btn" type="submit">Entrar no painel</button>
+      </form>
+      <div class="login-foot"><i data-lucide="shield-check"></i> Acesso restrito · Setor de Tecnologia</div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div class="app hidden" id="app">
+    <aside class="sidebar">
+      <div class="sb-logo">
+        <span class="lc"><img src="logo-sbs-white.png" alt="SBS"></span>
+        <span class="lt">Painel de T.I.<small>SBS Green Seeds</small></span>
+      </div>
+      <nav class="sb-nav" id="nav"></nav>
+      <div class="sb-foot">
+        <div class="sb-user">
+          <div class="av" id="sb-av">TI</div>
+          <div style="min-width:0"><div class="un" id="sb-name">T.I.</div><div class="ur" id="sb-role">Tecnologia</div></div>
+          <span class="sb-logout" id="logout" title="Sair"><i data-lucide="log-out"></i></span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div><h1 id="pg-title">Visão Geral</h1><div class="crumb" id="pg-crumb">T.I. · Visão Geral</div></div>
+        <div class="spacer"></div>
+      </header>
+      <main class="content" id="content"></main>
+    </div>
+  </div>
+
+  <!-- side drawer -->
+  <div class="scrim" id="scrim"></div>
+  <aside class="side" id="side">
+    <div class="side-head" id="side-head"></div>
+    <div class="side-body" id="side-body"></div>
+    <div class="side-foot" id="side-foot"></div>
+  </aside>
+
+  <!-- modal -->
+  <div class="modal-scrim" id="modal-scrim">
+    <div class="modal">
+      <div class="modal-head"><h3 id="modal-title">Título</h3><span class="btn-ic" id="modal-x"><i data-lucide="x"></i></span></div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-foot" id="modal-foot"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="auth-users.js"></script>
+  <script src="sbs-org.js"></script>
+  <script src="data.js"></script>
+  <script src="precos-data.js"></script>
+  <script src="pedidos-data.js"></script>
+  <script src="sbs-store.js"></script>
+  <script src="sbs-features.js"></script>
+  <script src="sbs-config.js"></script>
+  <script src="sbs-cloud.js"></script>
+  <script src="ti-core.js"></script>
+  <script src="ti-modules.js"></script>
+  <script src="ti-boot.js"></script>
+</body>
+</html>

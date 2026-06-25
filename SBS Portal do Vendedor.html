@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#0B6B61">
+<title>SBS Green Seeds · Portal do Vendedor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=36">
+<template id="__bundler_thumbnail" data-bg-color="#174D2F">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#174D2F"/>
+    <rect x="470" y="250" width="260" height="300" rx="60" fill="#6FA331"/>
+    <path d="M600 318c-44 26-70 70-70 122 0 46 30 84 70 92 40-8 70-46 70-92 0-52-26-96-70-122z" fill="#fff"/>
+    <rect x="592" y="430" width="16" height="118" rx="8" fill="#174D2F"/>
+  </svg>
+</template>
+</head>
+<body>
+  <div class="device" id="device" data-home="grid" data-screen-label="SBS Portal do Vendedor">
+
+    <!-- status bar -->
+    <div class="statusbar">
+      <span id="sb-time">08:12</span>
+    </div>
+
+    <!-- app bar -->
+    <header class="appbar">
+      <button class="iconbtn" id="ab-back" aria-label="Voltar" style="display:none"><i data-lucide="arrow-left"></i></button>
+      <button class="iconbtn" id="ab-menu" aria-label="Menu"><i data-lucide="menu"></i></button>
+      <div class="ab-title left" id="ab-title">SBS Green Seeds</div>
+      <div class="ab-logo" id="ab-logo"><img src="logo-sbs-white.png" alt="SBS Green Seeds"></div>
+      <button class="iconbtn ab-bell" id="ab-bell" aria-label="Notificações"><i data-lucide="bell"></i><span class="bell-badge" id="bell-badge"></span></button>
+    </header>
+
+    <!-- screen content -->
+    <main class="screen" id="screen"></main>
+
+    <!-- bottom nav -->
+    <nav class="bottomnav">
+      <button data-tab="home" class="active"><i data-lucide="house"></i><span>Home</span></button>
+      <button data-tab="dashboard"><i data-lucide="layout-dashboard"></i><span>Painel</span></button>
+      <button data-tab="precos"><i data-lucide="tags"></i><span>Preços</span></button>
+      <button data-tab="menu"><i data-lucide="menu"></i><span>Menu</span></button>
+    </nav>
+
+    <!-- drawer -->
+    <aside class="drawer" id="drawer">
+      <div class="drawer-head">
+        <div class="dh-logo"><span class="logo-chip"><img src="logo-sbs-white.png" alt="SBS Green Seeds"></span></div>
+        <div class="dh-user">
+          <div class="avatar">RA</div>
+          <div><div class="dh-name">Ricardo Alves</div><div class="dh-role">Representante</div></div>
+        </div>
+      </div>
+      <div class="drawer-list"></div>
+      <div class="drawer-foot">Portal do Vendedor · v1.0</div>
+    </aside>
+    <div class="scrim" id="scrim"></div>
+
+    <!-- toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- LOGIN (governança de acesso) -->
+    <div class="login" id="login">
+      <div class="login-inner">
+        <div class="login-logo"><img src="logo-sbs-white.png" alt="SBS Green Seeds"></div>
+        <h1 class="login-title">Portal do Vendedor</h1>
+        <p class="login-sub">Acesse com seu nome de usuário</p>
+        <form id="login-form" autocomplete="on" novalidate="novalidate">
+          <div class="field">
+            <label>Usuário</label>
+            <input id="lg-email" type="text" inputmode="text" autocapitalize="none" spellcheck="false" placeholder="primeiro nome" autocomplete="username">
+          </div>
+          <div class="field">
+            <label>Senha</label>
+            <div class="pass-wrap">
+              <input id="lg-pass" type="password" placeholder="Sua senha" autocomplete="current-password">
+              <button type="button" class="pass-eye" id="lg-eye" aria-label="Mostrar senha"><i data-lucide="eye"></i></button>
+            </div>
+          </div>
+          <div class="login-err" id="lg-err"></div>
+          <button class="btn" type="submit"><i data-lucide="log-in"></i> Entrar</button>
+        </form>
+        <div class="login-foot"><i data-lucide="shield-check"></i> Acesso restrito · Governança SBS Green Seeds</div>
+      </div>
+    </div>
+
+    <!-- tweaks mount -->
+    <div id="tweaks-root"></div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="auth-users.js"></script>
+  <script src="sbs-org.js"></script>
+  <script src="data.js"></script>
+  <script src="precos-data.js"></script>
+  <script src="pedidos-data.js"></script>
+  <script src="sbs-store.js"></script>
+  <script src="sbs-features.js"></script>
+  <script src="sbs-config.js"></script>
+  <script src="sbs-cloud.js"></script>
+  <script src="screens.js"></script>
+  <script src="screens2.js"></script>
+  <script src="protocolo-pastagem.js"></script>
+  <script src="metas-data.js"></script>
+  <script src="clientes-geo.js"></script>
+  <script src="plano-acao.js"></script>
+  <script src="clientes.js"></script>
+  <script src="rotas.js"></script>
+  <script src="drive-util.js"></script>
+  <script src="marketing.js"></script>
+  <script src="perdas.js"></script>
+  <script src="aprovacoes.js"></script>
+  <script src="nacional.js"></script>
+  <script src="onboarding.js"></script>
+  <script src="gamification.js"></script>
+  <script src="app.js"></script>
+
+  <!-- Tweaks (React) -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="tweaks-app.jsx"></script>
+</body>
+</html>
