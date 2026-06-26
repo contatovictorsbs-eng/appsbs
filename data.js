@@ -53,6 +53,7 @@ window.DATA = {
     { id: "frete",       label: "Calculadora Frete Fracionado", icon: "truck" },
     { id: "cargas",      label: "Cargas",               icon: "package-search" },
     { id: "config",      label: "Configurações",        icon: "settings" },
+    { id: "ajuda",       label: "Central de Ajuda",     icon: "circle-help" },
   ],
 
   /* ---------- DASHBOARD ---------- */

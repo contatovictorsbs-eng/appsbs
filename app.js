@@ -389,6 +389,7 @@ function applyUser(email){
 function avatarKey(){ return "sbs_avatar:"+(D.user.email||""); }
 function currentAvatar(){
   let url=""; try{ url=localStorage.getItem(avatarKey())||""; }catch(e){}
+  if(!url && window.SBS_AVATAR){ const c=SBS_AVATAR.url(D.user.email||""); if(c) url=c; }
   if(!url){ const def=(window.SBS_AVATARS||{})[D.user.email||""]; if(def) url=def; }
   return url;
 }

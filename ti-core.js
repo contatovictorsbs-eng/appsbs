@@ -23,7 +23,12 @@ const TI = (function(){
     { id:"overview", label:"Visão Geral",        icon:"layout-dashboard" },
     { id:"features", label:"Liberação de Features", icon:"toggle-right" },
     { id:"gmud",     label:"GMud · Mudanças",    icon:"git-pull-request-arrow", count:()=>gmudAbertas() },
+    { id:"plataformas", label:"Plataformas",      icon:"layout-grid" },
+    { id:"integracoes", label:"Integrações",      icon:"git-compare" },
+    { id:"painres",  label:"Painéis & Apps",     icon:"grid-3x3" },
     { id:"changelog",label:"Versões / Changelog",icon:"history" },
+    { sec:"Ajuda" },
+    { id:"ajuda",    label:"Central de Ajuda",   icon:"circle-help" },
   ];
   function gmudAbertas(){ return (S.getCol("gmuds")||[]).filter(g=>g.status!=="concluida"&&g.status!=="cancelada").length; }
 
@@ -99,6 +104,7 @@ const TI = (function(){
     document.getElementById("login").classList.add("hidden");
     document.getElementById("app").classList.remove("hidden");
     go("overview");
+    window.SBS_AVATAR&&SBS_AVATAR.setUser(email);
     try{ localStorage.setItem("sbs_ti_user", email); }catch(e){}
   }
   function logout(){ try{ localStorage.removeItem("sbs_ti_user"); }catch(e){} session=null; const p=document.getElementById("lg-pass"); if(p)p.value=""; showLogin(); }

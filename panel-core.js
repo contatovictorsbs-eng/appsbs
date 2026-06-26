@@ -7,10 +7,10 @@ const PANEL = (function(){
   /* ---------- perfis e permissões ---------- */
   // módulos que cada perfil enxerga (admin vê tudo)
   const PERMS = {
-    "Administrador":          ["overview","indicadores","usabilidade","acompanhamento","rotas","projecoes","perdas","aprovacoes","precos","campanhas","materiais","marketing","treinamentos","notificacoes","gamificacao","vendedores","novos","usuarios","reclamacoes","chamados","visitas","pedidos"],
-    "Comercial / Coordenador":["overview","indicadores","usabilidade","acompanhamento","rotas","projecoes","perdas","aprovacoes","precos","campanhas","materiais","marketing","treinamentos","notificacoes","gamificacao","vendedores","novos","reclamacoes","visitas","pedidos"],
-    "Crédito e Cobrança":     ["overview","indicadores","pedidos","chamados","reclamacoes"],
-    "Marketing":              ["overview","indicadores","campanhas","materiais","marketing","treinamentos","notificacoes"],
+    "Administrador":          ["overview","indicadores","usabilidade","mapa","acompanhamento","rotas","projecoes","perdas","aprovacoes","precos","campanhas","materiais","marketing","treinamentos","notificacoes","gamificacao","vendedores","novos","usuarios","reclamacoes","chamados","visitas","pedidos","ajuda"],
+    "Comercial / Coordenador":["overview","indicadores","usabilidade","mapa","acompanhamento","rotas","projecoes","perdas","aprovacoes","precos","campanhas","materiais","marketing","treinamentos","notificacoes","gamificacao","vendedores","novos","reclamacoes","visitas","pedidos","ajuda"],
+    "Crédito e Cobrança":     ["overview","indicadores","pedidos","chamados","reclamacoes","ajuda"],
+    "Marketing":              ["overview","indicadores","campanhas","materiais","marketing","treinamentos","notificacoes","ajuda"],
   };
   // quem pode entrar no painel (perfil administrativo)
   function userProfile(email){
@@ -24,6 +24,7 @@ const PANEL = (function(){
     { id:"overview",    label:"Visão Geral",      icon:"layout-dashboard" },
     { id:"indicadores", label:"Indicadores / KPIs", icon:"bar-chart-3" },
     { id:"usabilidade", label:"Usabilidade do App", icon:"activity" },
+    { id:"mapa",       label:"Mapa da Equipe",    icon:"map-pinned" },
     { id:"acompanhamento", label:"Acompanhamento", icon:"line-chart" },
     { id:"rotas",       label:"Rotas da Equipe",   icon:"map" },
     { id:"projecoes",   label:"Projeções da Equipe", icon:"calendar-check" },
@@ -46,6 +47,8 @@ const PANEL = (function(){
     { id:"vendedores",  label:"Vendedores",        icon:"contact" },
     { id:"novos",       label:"Novos Clientes",    icon:"user-plus" },
     { id:"usuarios",    label:"Usuários e Acessos", icon:"users" },
+    { sec:"Ajuda" },
+    { id:"ajuda",       label:"Central de Ajuda",  icon:"circle-help" },
   ];
   function openCount(col){ return (S.getCol(col)||[]).filter(x=>x.status!=="resolvido").length; }
 
@@ -128,8 +131,7 @@ const PANEL = (function(){
     document.getElementById("sb-role").textContent = perfil;
     const av = document.getElementById("sb-av");
     av.textContent = session.nome.split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();
-    const ph = (window.SBS_AVATARS||{})[email];
-    if(ph){ av.style.backgroundImage="url("+ph+")"; av.textContent=""; }
+    window.SBS_AVATAR&&SBS_AVATAR.setUser(email);
     document.getElementById("login").classList.add("hidden");
     document.getElementById("app").classList.remove("hidden");
     // primeiro módulo permitido

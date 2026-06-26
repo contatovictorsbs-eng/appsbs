@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SBS Green Seeds · Painel do CEO</title>
+<meta name="sbs-platform" content="ceo">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="panel.css?v=16">
+<template id="__bundler_thumbnail" data-bg-color="#13241F">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#13241F"/>
+    <circle cx="600" cy="400" r="150" fill="#C7A24A"/>
+    <path d="M540 430 l40 40 90 -110" fill="none" stroke="#13241F" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</template>
+<style>
+  /* ===== Painel do CEO — tema executivo (grafite + dourado) ===== */
+  .app{ --brand:#13241F; --brand-2:#C7A24A; }
+  .sidebar{ background:#13241F; }
+  .sb-logo .lt small{ color:#9ab3a9; }
+  .nav-item.active{ background:rgba(199,162,74,.16); color:#fff; }
+  .nav-item.active i{ color:#C7A24A; }
+  .login-card .btn, .app .btn{ background:#13241F; }
+
+  /* KPIs */
+  .ceo-kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-bottom:22px; }
+  .ceo-kpis.four{ grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); }
+  .ceo-kpi{ background:var(--card,#fff); border:1px solid var(--line,#e6ebe9); border-radius:16px; padding:18px; position:relative; }
+  .ceo-kpi-ic{ width:38px; height:38px; border-radius:11px; background:#f3efe3; color:#A9842F; display:grid; place-items:center; }
+  .ceo-kpi-ic i{ width:19px; height:19px; }
+  .ceo-kpi.good .ceo-kpi-ic{ background:#e6f7f3; color:#0B8A78; }
+  .ceo-kpi.warn .ceo-kpi-ic{ background:#fdeede; color:#b46b16; }
+  .ceo-kpi-v{ font-size:25px; font-weight:800; color:var(--ink,#16201a); margin-top:12px; line-height:1.1; }
+  .ceo-kpi-l{ font-size:12.5px; color:var(--muted,#6b7a74); margin-top:3px; }
+
+  .ceo-cols{ display:grid; grid-template-columns:1.5fr 1fr; gap:18px; }
+  .ceo-cols2{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .ceo-card{ background:var(--card,#fff); border:1px solid var(--line,#e6ebe9); border-radius:16px; padding:18px; }
+  .ceo-card-h{ font-size:13px; font-weight:800; color:var(--ink,#16201a); display:flex; align-items:center; gap:8px; margin-bottom:16px; }
+  .ceo-card-h i{ width:17px; height:17px; color:#A9842F; }
+
+  /* ranking / barras */
+  .ceo-rank{ display:flex; align-items:center; gap:12px; padding:9px 0; }
+  .ceo-rank-pos{ width:24px; height:24px; border-radius:7px; background:#f3efe3; color:#A9842F; font-size:12px; font-weight:800; display:grid; place-items:center; flex:0 0 auto; }
+  .ceo-rank-av{ width:30px; height:30px; border-radius:9px; background:#13241F; color:#fff; font-size:11px; font-weight:800; display:grid; place-items:center; flex:0 0 auto; }
+  .ceo-rank-main{ flex:1; min-width:0; }
+  .ceo-rank-top{ display:flex; justify-content:space-between; gap:10px; font-size:13.5px; color:var(--ink,#16201a); }
+  .ceo-rank-top span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ceo-rank-top b{ flex:0 0 auto; font-weight:800; }
+  .ceo-bar{ height:7px; background:#eef2f0; border-radius:6px; margin-top:6px; overflow:hidden; }
+  .ceo-bar span{ display:block; height:100%; background:linear-gradient(90deg,#C7A24A,#A9842F); border-radius:6px; }
+  .ceo-dim{ color:var(--muted,#8b968f); font-weight:600; font-style:normal; }
+  .ceo-brow{ margin-bottom:11px; }
+  .ceo-brow-top{ display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px; color:var(--ink-2,#3a463f); }
+  .badge{ font-size:11px; font-weight:800; padding:3px 9px; border-radius:20px; white-space:nowrap; }
+  .badge.b-info{ background:#e9f0fb; color:#2A4A7F; }
+
+  /* side minis */
+  .ceo-side{ display:flex; flex-direction:column; gap:14px; }
+  .ceo-mini{ background:var(--card,#fff); border:1px solid var(--line,#e6ebe9); border-radius:16px; padding:16px; }
+  .ceo-mini-h{ font-size:12px; font-weight:800; color:var(--muted,#6b7a74); display:flex; align-items:center; gap:7px; text-transform:uppercase; letter-spacing:.03em; }
+  .ceo-mini-h i{ width:15px; height:15px; color:#A9842F; }
+  .ceo-mini-v{ font-size:30px; font-weight:800; color:var(--ink,#16201a); margin-top:8px; }
+  .ceo-mini-v.small{ font-size:24px; }
+  .ceo-mini-v small{ font-size:13px; color:var(--muted,#8b968f); font-weight:600; margin-left:6px; }
+  .ceo-mini-row{ display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2,#3a463f); margin-top:9px; }
+  .ceo-mini-row b{ font-weight:800; } .ceo-mini-row b.hot{ color:#b3261e; }
+  .ceo-mini-link{ display:inline-block; margin-top:10px; font-size:12.5px; font-weight:700; color:#A9842F; cursor:pointer; text-decoration:none; }
+  .ceo-mini-foot{ font-size:11.5px; color:var(--muted,#8b968f); margin-top:6px; }
+
+  /* pills atendimento */
+  .ceo-pills{ display:flex; gap:10px; margin-bottom:14px; }
+  .ceo-pill{ flex:1; border-radius:12px; padding:12px; text-align:center; background:#f5f7f6; }
+  .ceo-pill b{ display:block; font-size:22px; font-weight:800; color:var(--ink,#16201a); }
+  .ceo-pill span{ font-size:11.5px; color:var(--muted,#6b7a74); }
+  .ceo-pill.hot{ background:#fde8e6; } .ceo-pill.hot b{ color:#b3261e; }
+  .ceo-pill.warn{ background:#fdf0dd; } .ceo-pill.warn b{ color:#9a5a12; }
+  .ceo-pill.ok{ background:#e6f7f3; } .ceo-pill.ok b{ color:#0B8A78; }
+
+  .ceo-list{ display:flex; flex-direction:column; }
+  .ceo-li{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 0; border-bottom:1px solid var(--line,#eef1f0); }
+  .ceo-li:last-child{ border-bottom:0; }
+  .ceo-li-t{ font-size:13.5px; font-weight:700; color:var(--ink,#16201a); }
+  .ceo-li-s{ font-size:11.5px; color:var(--muted,#6b7a74); margin-top:1px; }
+
+  /* versão */
+  .ceo-version{ display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; background:#13241F; color:#fff; border-radius:16px; padding:22px 24px; margin-bottom:20px; }
+  .ceo-version-v{ font-size:30px; font-weight:800; }
+  .ceo-version-l{ font-size:12.5px; color:#9ab3a9; margin-top:3px; }
+  .ceo-version-side{ display:flex; gap:22px; }
+  .ceo-version-side div{ font-size:12.5px; color:#9ab3a9; }
+  .ceo-version-side b{ display:block; font-size:20px; color:#C7A24A; font-weight:800; }
+
+  .ceo-fgrp{ font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:#A9842F; margin:14px 0 6px; }
+  .ceo-feat{ display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--line,#f0f2f1); font-size:13.5px; color:var(--ink,#16201a); }
+  .ceo-flag{ font-size:11px; font-weight:800; padding:3px 9px; border-radius:20px; }
+  .ceo-flag.on{ background:#e6f7f3; color:#0B8A78; } .ceo-flag.off{ background:#fde8e6; color:#b3261e; }
+  .ceo-gm{ padding:10px 0; border-bottom:1px solid var(--line,#f0f2f1); }
+  .ceo-gm:last-child{ border-bottom:0; }
+  .ceo-gm-top{ display:flex; align-items:center; gap:8px; }
+  .ceo-gm-v{ font-size:12px; font-weight:800; color:#A9842F; }
+  .ceo-gm-t{ font-size:14px; font-weight:700; color:var(--ink,#16201a); margin-top:3px; }
+
+  .ceo-empty{ text-align:center; color:var(--muted,#8b968f); font-size:13px; padding:22px; }
+  .ceo-note{ display:flex; align-items:flex-start; gap:9px; background:#f3efe3; color:#6b5a2e; border-radius:13px; padding:13px 16px; margin-top:18px; font-size:13px; line-height:1.5; }
+  .ceo-note i{ width:16px; height:16px; flex:0 0 auto; margin-top:1px; color:#A9842F; }
+
+  @media(max-width:900px){ .ceo-cols,.ceo-cols2{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div class="login" id="login">
+    <div class="login-card">
+      <div class="login-logo"><img src="logo-sbs-white.png" alt="SBS Green Seeds"></div>
+      <h2>Painel do CEO</h2>
+      <p class="sub">Visão executiva · somente leitura</p>
+      <form id="login-form" novalidate>
+        <div class="fld"><label>Usuário</label>
+          <input id="lg-email" type="text" autocapitalize="none" spellcheck="false" placeholder="primeiro nome"></div>
+        <div class="fld"><label>Senha</label>
+          <input id="lg-pass" type="password" placeholder="Sua senha"></div>
+        <div class="err" id="lg-err"></div>
+        <button class="btn" type="submit">Entrar no painel</button>
+      </form>
+      <div class="login-foot"><i data-lucide="shield-check"></i> Acesso restrito · Diretoria</div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div class="app hidden" id="app">
+    <aside class="sidebar">
+      <div class="sb-logo">
+        <span class="lc"><img src="logo-sbs-white.png" alt="SBS"></span>
+        <span class="lt">Painel do CEO<small>SBS Green Seeds</small></span>
+      </div>
+      <nav class="sb-nav" id="nav"></nav>
+      <div class="sb-foot">
+        <div class="sb-user">
+          <div class="av" id="sb-av">CEO</div>
+          <div style="min-width:0"><div class="un" id="sb-name">CEO</div><div class="ur" id="sb-role">Diretoria</div></div>
+          <span class="sb-logout" id="logout" title="Sair"><i data-lucide="log-out"></i></span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div><h1 id="pg-title">Panorama Geral</h1><div class="crumb" id="pg-crumb">CEO · Panorama Geral</div></div>
+        <div class="spacer"></div>
+      </header>
+      <main class="content" id="content"></main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="auth-users.js"></script>
+  <script src="sbs-org.js"></script>
+  <script src="data.js"></script>
+  <script src="precos-data.js"></script>
+  <script src="pedidos-data.js"></script>
+  <script src="sbs-store.js"></script>
+  <script src="sbs-features.js"></script>
+  <script src="sbs-plataformas.js"></script>
+  <script src="sbs-config.js"></script>
+  <script src="sbs-cloud.js"></script>
+  <script src="sbs-avatar.js"></script>
+  <script src="sbs-assistant.js"></script>
+  <script src="sbs-mapa.js"></script>
+  <script src="marketing-data.js"></script>
+  <script src="pd-data.js"></script>
+  <script src="rh-data.js"></script>
+  <script src="ceo-core.js"></script>
+  <script src="ceo-modules.js"></script>
+  <script src="docs-core.js"></script>
+  <script src="docs-data-ceo.js"></script>
+  <script src="ajuda-ceo.js"></script>
+  <script src="ceo-boot.js"></script>
+</body>
+</html>

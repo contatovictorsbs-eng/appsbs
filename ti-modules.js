@@ -291,4 +291,55 @@
     }
   };
 
+  /* =================== PLATAFORMAS =================== */
+  M.plataformas = {
+    label:"Plataformas do Sistema",
+    render(){
+      var plats = (window.SBS_PLAT ? SBS_PLAT.list() : []);
+      var ICON = { vendedor:"smartphone", gerencial:"layout-dashboard", ti:"cpu", ceo:"line-chart", atendimento:"headset", marketing:"megaphone", pd:"flask-conical", rh:"users", colaborador:"id-card" };
+      var DESC = {
+        vendedor:"App da força de vendas (campo).",
+        gerencial:"Gestão comercial e conteúdo do app.",
+        ti:"Este painel — controla as demais plataformas.",
+        ceo:"Visão executiva consolidada (somente leitura).",
+        atendimento:"Caixa unificada de atendimento (3 marcas).",
+        marketing:"Campanhas, materiais, conteúdo e eventos.",
+        pd:"Pesquisa, ensaios, cultivares e inovação.",
+        rh:"Recrutamento, seleção e endomarketing.",
+        colaborador:"App do funcionário: mural, agenda, vagas, aniversários."
+      };
+      var on = plats.filter(function(p){ return p.enabled!==false; }).length;
+      return `
+      <div class="ti-toolbar"><div class="ti-sub">${on} de ${plats.length} plataformas ativas · desligar exibe "em manutenção" para os usuários, em tempo real</div></div>
+      <div class="ti-group">
+        ${plats.map(function(p){
+          var locked = p.id==="ti";
+          var enabled = p.enabled!==false;
+          return `<div class="ti-feat ${enabled?'':'is-off'}">
+            <span class="ti-feat-ic"><i data-lucide="${ICON[p.id]||'square'}"></i></span>
+            <div class="ti-feat-main">
+              <div class="ti-feat-t">${esc(p.nome)} ${locked?'<span class="ti-tag" style="margin-left:6px">este painel</span>':''}</div>
+              <div class="ti-feat-s">${esc(DESC[p.id]||'')} · ${enabled?'Ativa':'Em manutenção'}</div>
+            </div>
+            ${locked
+              ? '<span class="ti-lock"><i data-lucide="lock"></i></span>'
+              : `<label class="ti-switch"><input type="checkbox" data-plat="${p.id}" ${enabled?'checked':''}><span class="ti-slider"></span></label>`}
+          </div>`;
+        }).join("")}
+      </div>
+      <div class="ti-note info" style="margin-top:16px"><i data-lucide="info"></i> A T.I. gerencia todas as plataformas. Desligar uma delas a coloca em manutenção para todos os usuários (sem republicar). O Painel de T.I. nunca pode se desligar, para você sempre conseguir religar as outras. Registre a mudança em <b>GMud</b>.</div>`;
+    },
+    mount(c){
+      c.querySelectorAll("[data-plat]").forEach(function(inp){
+        inp.addEventListener("change", function(){
+          if(!window.SBS_PLAT) return;
+          var p = SBS_PLAT.list().find(function(x){ return x.id===inp.dataset.plat; });
+          SBS_PLAT.setEnabled(inp.dataset.plat, inp.checked);
+          TI.toast((inp.checked?"Ativada: ":"Em manutenção: ")+(p?p.nome:inp.dataset.plat));
+          TI.go("plataformas");
+        });
+      });
+    }
+  };
+
 })();

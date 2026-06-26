@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SBS Green Seeds · Painel de Marketing</title>
+<meta name="sbs-platform" content="marketing">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="panel.css?v=16">
+<template id="__bundler_thumbnail" data-bg-color="#0B6B61">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#0B6B61"/>
+    <path d="M470 360 v120 h70 l160 90 V270 l-160 90 z" fill="#6FA331"/>
+    <path d="M735 350 a70 70 0 0 1 0 140" fill="none" stroke="#fff" stroke-width="20" stroke-linecap="round"/>
+  </svg>
+</template>
+<style>
+  .mc-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:22px}
+  .mc-kpi{display:flex;gap:13px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+  .mc-kpi-ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:#E9F3EF;color:#0B6B61;flex:0 0 auto}
+  .mc-kpi-ic i{width:21px;height:21px}
+  .mc-kpi.ok .mc-kpi-ic{background:#E4F5EC;color:#0B8A5E}
+  .mc-kpi-v{font-size:23px;font-weight:800;line-height:1.1;color:var(--ink)}
+  .mc-kpi-l{font-size:12px;color:var(--muted);margin-top:2px}
+  .mc-cols{display:grid;grid-template-columns:1.5fr 1fr;gap:18px}
+  .mc-side{display:flex;flex-direction:column;gap:14px}
+  .mc-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}
+  .mc-card-h{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:14px;color:var(--ink)}
+  .mc-card-h i{width:17px;height:17px;color:#0B6B61}
+  .mc-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
+  .mc-row:last-child{border-bottom:0}
+  .mc-row-main{flex:1;min-width:0}
+  .mc-row-t{font-size:13.5px;font-weight:700;color:var(--ink)}
+  .mc-row-s{font-size:11.5px;color:var(--muted);margin-top:1px}
+  .mc-row-r{font-weight:800;font-size:13.5px;color:#0B6B61}
+  .mc-mini{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+  .mc-mini-h{font-size:12px;font-weight:800;color:var(--muted);display:flex;align-items:center;gap:7px;text-transform:uppercase;letter-spacing:.03em}
+  .mc-mini-h i{width:15px;height:15px;color:#0B6B61}
+  .mc-mini-v{font-size:28px;font-weight:800;margin-top:8px;color:var(--ink)}
+  .mc-mini-row{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--ink-2);margin-top:8px}
+  .mc-mini-link{display:inline-block;margin-top:10px;font-size:12.5px;font-weight:700;color:#0B6B61;cursor:pointer;text-decoration:none}
+  .mc-note{display:flex;gap:9px;align-items:flex-start;background:#EEF5F2;color:#2a554c;border-radius:13px;padding:13px 16px;margin-top:18px;font-size:13px;line-height:1.5}
+  .mc-note i{width:16px;height:16px;flex:0 0 auto;margin-top:1px;color:#0B6B61}
+  .mc-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+  .mc-sub{font-size:12.5px;color:var(--muted);font-weight:600}
+  .mc-btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px 14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}
+  .mc-btn i{width:15px;height:15px}
+  .mc-btn.primary{background:#0B6B61;border-color:#0B6B61;color:#fff}
+  .mc-btn.primary:hover{background:#095a52}
+  .mc-btn.ok{background:#0B8A5E;border-color:#0B8A5E;color:#fff}
+  .mc-btn.ghost:hover{border-color:#bcc9c4}
+  .mc-btn.danger{color:#b3261e}
+  .mc-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+  .mc-ccard{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:16px;cursor:pointer;transition:.15s}
+  .mc-ccard:hover{border-color:#9fc4ba;box-shadow:0 6px 18px rgba(11,107,97,.08);transform:translateY(-1px)}
+  .mc-ccard-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+  .mc-ccard-verba{font-size:12px;font-weight:800;color:#0B6B61}
+  .mc-ccard-t{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:6px}
+  .mc-ccard-d{font-size:12.5px;color:var(--muted);line-height:1.45;margin-bottom:11px}
+  .mc-ccard-meta{display:flex;flex-direction:column;gap:5px}
+  .mc-ccard-meta span{font-size:12px;color:var(--ink-2);display:flex;align-items:center;gap:7px}
+  .mc-ccard-meta i{width:13px;height:13px;color:var(--muted);flex:0 0 auto}
+  .mc-badge{font-size:11px;font-weight:800;padding:4px 10px;border-radius:20px}
+  .mc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+  .mc-mat{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .mc-mat-thumb{aspect-ratio:4/3;background:#EEF1F0;display:grid;place-items:center;cursor:pointer;overflow:hidden}
+  .mc-mat-thumb img{width:100%;height:100%;object-fit:cover}
+  .mc-mat-ph i{width:30px;height:30px;color:#b6c0bb}
+  .mc-mat-body{padding:11px 13px}
+  .mc-mat-name{font-size:13.5px;font-weight:700;color:var(--ink)}
+  .mc-mat-cat{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .mc-mat-acts{display:flex;gap:12px;margin-top:9px}
+  .mc-link{border:0;background:none;color:#0B6B61;font-size:12px;font-weight:700;cursor:pointer;padding:0}
+  .mc-link.danger{color:#b3261e}
+  .mc-prev{margin-top:10px}.mc-prev img{max-width:100%;border-radius:10px;max-height:200px}
+  .mc-kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .mc-kcol{background:#F4F6F5;border-radius:14px;padding:12px;min-height:120px}
+  .mc-kcol-h{font-size:12px;font-weight:800;color:var(--ink-2);margin-bottom:10px;display:flex;justify-content:space-between}
+  .mc-kcol-h span{background:#dde5e1;color:#5b6b65;border-radius:10px;padding:0 7px;font-size:11px}
+  .mc-kcard{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:11px;margin-bottom:9px;cursor:pointer}
+  .mc-kcard:hover{border-color:#9fc4ba}
+  .mc-kcard-t{font-size:13px;font-weight:700;color:var(--ink);line-height:1.35}
+  .mc-kcard-m{font-size:11.5px;color:var(--muted);margin-top:6px}
+  .mc-tagc{background:#E9F3EF;color:#0B6B61;font-weight:700;padding:2px 7px;border-radius:20px;font-size:10.5px}
+  .mc-kcard-f{font-size:11px;color:var(--muted);margin-top:7px;display:flex;align-items:center;gap:5px}
+  .mc-kcard-f i{width:12px;height:12px}
+  .mc-kempty{font-size:12px;color:#b6c0bb;text-align:center;padding:8px}
+  .mc-table{display:flex;flex-direction:column}
+  .mc-trow{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr .8fr 1fr;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px}
+  .mc-trow.head{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+  .mc-trow:last-child{border-bottom:0}
+  .mc-trow .r{text-align:right}
+  .mc-trow .strong{font-weight:800}
+  .mc-trow .up{color:#0B8A5E;font-weight:700}
+  .mc-trow .down{color:#b3261e;font-weight:700}
+  .mc-tch{font-weight:700;display:flex;align-items:center;gap:7px}
+  .mc-ic{width:15px;height:15px;color:var(--muted)}
+  .mc-empty{text-align:center;color:var(--muted);font-size:13px;padding:18px}
+  .mc-empty.big{display:flex;flex-direction:column;align-items:center;gap:10px;padding:50px 18px}
+  .mc-empty.big i{width:36px;height:36px;color:#b6c0bb}
+  .mc-eyebrow{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#0B6B61;margin-bottom:3px}
+  .side-head h2{font-size:20px;font-weight:800;margin:4px 0 8px}
+  .side-x{cursor:pointer;color:var(--muted)}.side-x i{width:20px;height:20px}
+  .kv .k{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);min-width:120px}
+  .kv .vv{font-size:14px;color:var(--ink);flex:1}
+  @media(max-width:1000px){.mc-cols{grid-template-columns:1fr}.mc-kanban{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+  <div class="login" id="login">
+    <div class="login-card">
+      <div class="login-logo"><img src="logo-sbs-white.png" alt="SBS Green Seeds"></div>
+      <h2>Painel de Marketing</h2>
+      <p class="sub">Campanhas · Conteúdo · Eventos · Redes</p>
+      <form id="login-form" novalidate>
+        <div class="fld"><label>Usuário</label><input id="lg-email" type="text" autocapitalize="none" spellcheck="false" placeholder="primeiro nome"></div>
+        <div class="fld"><label>Senha</label><input id="lg-pass" type="password" placeholder="Sua senha"></div>
+        <div class="err" id="lg-err"></div>
+        <button class="btn" type="submit">Entrar no painel</button>
+      </form>
+      <div class="login-foot"><i data-lucide="megaphone"></i> Acesso restrito · Marketing</div>
+    </div>
+  </div>
+
+  <div class="app hidden" id="app">
+    <aside class="sidebar">
+      <div class="sb-logo"><span class="lc"><img src="logo-sbs-white.png" alt="SBS"></span><span class="lt">Marketing<small>SBS Green Seeds</small></span></div>
+      <nav class="sb-nav" id="nav"></nav>
+      <div class="sb-foot"><div class="sb-user"><div class="av" id="sb-av">MK</div><div style="min-width:0"><div class="un" id="sb-name">Marketing</div><div class="ur" id="sb-role">Marketing</div></div><span class="sb-logout" id="logout" title="Sair"><i data-lucide="log-out"></i></span></div></div>
+    </aside>
+    <div class="main">
+      <header class="topbar"><div><h1 id="pg-title">Visão Geral</h1><div class="crumb" id="pg-crumb">Marketing · Visão Geral</div></div><div class="spacer"></div></header>
+      <main class="content" id="content"></main>
+    </div>
+  </div>
+
+  <div class="scrim" id="scrim"></div>
+  <aside class="side" id="side"><div class="side-head" id="side-head"></div><div class="side-body" id="side-body"></div><div class="side-foot" id="side-foot"></div></aside>
+
+  <div class="modal-scrim" id="modal-scrim"><div class="modal"><div class="modal-head"><h3 id="modal-title">Título</h3><span class="btn-ic" id="modal-x"><i data-lucide="x"></i></span></div><div class="modal-body" id="modal-body"></div><div class="modal-foot" id="modal-foot"></div></div></div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="auth-users.js"></script>
+  <script src="sbs-org.js"></script>
+  <script src="data.js"></script>
+  <script src="precos-data.js"></script>
+  <script src="pedidos-data.js"></script>
+  <script src="sbs-store.js"></script>
+  <script src="sbs-plataformas.js"></script>
+  <script src="sbs-config.js"></script>
+  <script src="sbs-cloud.js"></script>
+  <script src="sbs-avatar.js"></script>
+  <script src="sbs-assistant.js"></script>
+  <script src="marketing-data.js"></script>
+  <script src="docs-core.js"></script>
+  <script src="docs-data-marketing.js"></script>
+  <script src="mkt-core.js"></script>
+  <script src="mkt-modules.js"></script>
+  <script src="mkt-boot.js"></script>
+</body>
+</html>

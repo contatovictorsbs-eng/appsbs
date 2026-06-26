@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="sbs-platform" content="ti">
 <title>SBS Green Seeds · Painel de T.I.</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="panel.css?v=14">
+<link rel="stylesheet" href="panel.css?v=15">
 <template id="__bundler_thumbnail" data-bg-color="#1B2A4A">
   <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
     <rect width="1200" height="800" fill="#1B2A4A"/>
@@ -83,6 +83,8 @@
   .ti-slider::before{ content:""; position:absolute; width:20px; height:20px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.18s; box-shadow:0 1px 3px rgba(0,0,0,.25); }
   .ti-switch input:checked + .ti-slider{ background:#1F9E8C; }
   .ti-switch input:checked + .ti-slider::before{ transform:translateX(20px); }
+  .ti-lock{ width:38px; height:26px; display:grid; place-items:center; color:#9aa6a1; flex:0 0 auto; }
+  .ti-lock i{ width:16px; height:16px; }
 
   /* gmud cards */
   .ti-cards{ display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
@@ -153,6 +155,26 @@
   .ti-tl-x{ font-size:11.5px; color:var(--muted,#8b968f); margin-top:5px; }
 
   @media (max-width:900px){ .ti-kpis{ grid-template-columns:1fr 1fr; } .ti-cols{ grid-template-columns:1fr; } .ti-form{ grid-template-columns:1fr; } }
+  .ti-int{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line,#eef1f0)}
+  .ti-int:last-child{border-bottom:0}
+  .ti-hdot{width:11px;height:11px;border-radius:50%;flex:0 0 auto;margin-top:4px}
+  .ti-hdot.ok{background:#1F9E8C}.ti-hdot.warn{background:#E5A019}.ti-hdot.erro{background:#b3261e}
+  .ti-int-t{font-size:13.5px;font-weight:700;color:var(--ink,#16201a)}
+  .ti-int-d{font-size:12.5px;color:var(--muted,#6b7a74);margin-top:2px;line-height:1.45}
+  .ti-launch{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+  .ti-lcard{background:var(--card,#fff);border:1px solid var(--line,#e6ebe9);border-radius:15px;padding:15px;border-top:3px solid var(--c)}
+  .ti-lc-h{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+  .ti-lc-ic{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;color:#fff;flex:0 0 auto}
+  .ti-lc-ic i{width:20px;height:20px}
+  .ti-lc-t{flex:1;min-width:0}
+  .ti-lc-n{font-size:14.5px;font-weight:800;color:var(--ink,#16201a)}
+  .ti-lc-s{font-size:11.5px;font-weight:700}
+  .ti-lc-s.on{color:#0B8A5E}.ti-lc-s.off{color:#C0710F}
+  .ti-lc-go{width:34px;height:34px;border-radius:9px;background:#f3f5f4;display:grid;place-items:center;color:#2A4A7F;flex:0 0 auto}
+  .ti-lc-go i{width:17px;height:17px}
+  .ti-lc-go:hover{background:#e7eb ea;background:#e7ebea}
+  .ti-lc-mods{display:flex;flex-wrap:wrap;gap:6px}
+  .ti-lc-mod{font-size:11px;font-weight:600;color:#46554d;background:#eef2f0;padding:4px 9px;border-radius:20px}
 </style>
 </head>
 <body>
@@ -228,10 +250,18 @@
   <script src="pedidos-data.js"></script>
   <script src="sbs-store.js"></script>
   <script src="sbs-features.js"></script>
+  <script src="sbs-plataformas.js"></script>
   <script src="sbs-config.js"></script>
   <script src="sbs-cloud.js"></script>
+  <script src="sbs-avatar.js"></script>
+  <script src="sbs-assistant.js"></script>
   <script src="ti-core.js"></script>
   <script src="ti-modules.js"></script>
+  <script src="ti-integracoes.js"></script>
+  <script src="ti-painres.js"></script>
+  <script src="docs-core.js"></script>
+  <script src="docs-data-ti.js"></script>
+  <script src="ajuda-ti.js"></script>
   <script src="ti-boot.js"></script>
 </body>
 </html>

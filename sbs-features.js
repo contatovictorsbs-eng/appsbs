@@ -44,6 +44,7 @@
     { id:"ranking",         label:"Ranking & Gamificação",   grupo:"Ferramentas", icon:"trophy" },
     { id:"clientes",        label:"Clientes & Rotas",        grupo:"Ferramentas", icon:"route" },
     { id:"visitas",         label:"Relatório de Visitas",    grupo:"Ferramentas", icon:"map-pinned" },
+    { id:"rastreamento",    label:"Rastreamento de Localização", grupo:"Ferramentas", icon:"navigation" },
   ];
 
   function store(){ return window.SBSStore; }

@@ -22,6 +22,36 @@
   to = "/SBS Painel T.I.html"
   status = 200
 
+[[redirects]]
+  from = "/ceo"
+  to = "/SBS Painel CEO.html"
+  status = 200
+
+[[redirects]]
+  from = "/atendimento"
+  to = "/SBS Painel Atendimento.html"
+  status = 200
+
+[[redirects]]
+  from = "/marketing"
+  to = "/SBS Painel Marketing.html"
+  status = 200
+
+[[redirects]]
+  from = "/pd"
+  to = "/SBS Painel PD.html"
+  status = 200
+
+[[redirects]]
+  from = "/rh"
+  to = "/SBS Painel RH.html"
+  status = 200
+
+[[redirects]]
+  from = "/colaborador"
+  to = "/SBS Portal do Colaborador.html"
+  status = 200
+
 # cabeçalhos de segurança básicos
 [[headers]]
   for = "/*"
