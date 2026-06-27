@@ -7,8 +7,8 @@ const PANEL = (function(){
   /* ---------- perfis e permissões ---------- */
   // módulos que cada perfil enxerga (admin vê tudo)
   const PERMS = {
-    "Administrador":          ["overview","indicadores","usabilidade","mapa","acompanhamento","rotas","projecoes","perdas","aprovacoes","precos","campanhas","materiais","marketing","treinamentos","notificacoes","gamificacao","vendedores","novos","usuarios","reclamacoes","chamados","visitas","pedidos","ajuda"],
-    "Comercial / Coordenador":["overview","indicadores","usabilidade","mapa","acompanhamento","rotas","projecoes","perdas","aprovacoes","precos","campanhas","materiais","marketing","treinamentos","notificacoes","gamificacao","vendedores","novos","reclamacoes","visitas","pedidos","ajuda"],
+    "Administrador":          ["overview","indicadores","analises","usabilidade","mapa","acompanhamento","rotas","projecoes","perdas","aprovacoes","precos","campanhas","materiais","marketing","treinamentos","notificacoes","gamificacao","vendedores","novos","usuarios","reclamacoes","chamados","visitas","pedidos","ajuda"],
+    "Comercial / Coordenador":["overview","indicadores","analises","usabilidade","mapa","acompanhamento","rotas","projecoes","perdas","aprovacoes","precos","campanhas","materiais","marketing","treinamentos","notificacoes","gamificacao","vendedores","novos","reclamacoes","visitas","pedidos","ajuda"],
     "Crédito e Cobrança":     ["overview","indicadores","pedidos","chamados","reclamacoes","ajuda"],
     "Marketing":              ["overview","indicadores","campanhas","materiais","marketing","treinamentos","notificacoes","ajuda"],
   };
@@ -23,6 +23,7 @@ const PANEL = (function(){
     { sec:"Geral" },
     { id:"overview",    label:"Visão Geral",      icon:"layout-dashboard" },
     { id:"indicadores", label:"Indicadores / KPIs", icon:"bar-chart-3" },
+    { id:"analises",    label:"Análises & Relatórios", icon:"pie-chart" },
     { id:"usabilidade", label:"Usabilidade do App", icon:"activity" },
     { id:"mapa",       label:"Mapa da Equipe",    icon:"map-pinned" },
     { id:"acompanhamento", label:"Acompanhamento", icon:"line-chart" },
@@ -160,7 +161,7 @@ const PANEL = (function(){
       const users = (window.SBS_USERS||[]).map(x=>x.toLowerCase());
       const inDb = window.SBSStore && window.SBSStore.getCol("usuarios").some(u=>(u.email||"").toLowerCase()===email && u.ativo!==false);
       if(!users.includes(email) && !inDb){ return showErr("Usuário não autorizado."); }
-      if(pass!==window.SBS_PASSWORD){ return showErr("Senha incorreta."); }
+      var _a=window.SBS_AUTH?SBS_AUTH.check(email,pass):{ok:pass===window.SBS_PASSWORD}; if(!_a.ok){ return showErr("Senha incorreta."); } if(_a.mustChange&&_a.isDefault&&window.SBS_AUTH) setTimeout(function(){SBS_AUTH.promptChange((email||"").toLowerCase());},700);
       const perfil = userProfile(email);
       if(!perfil || !PERMS[perfil]){ return showErr("Seu usuário não tem perfil de acesso ao painel."); }
       startSession(email);

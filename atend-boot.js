@@ -20,7 +20,9 @@
     var email = (document.getElementById("lg-email").value||"").trim().toLowerCase();
     var pass = document.getElementById("lg-pass").value||"";
     if(!email){ err.textContent="Informe o e-mail."; err.classList.add("show"); return; }
-    if(window.SBS_PASSWORD && pass!==window.SBS_PASSWORD && pass!=="••••••••"){ err.textContent="Senha incorreta."; err.classList.add("show"); return; }
+    if(window.SBS_ORG){ var rr=window.SBS_ORG.resolveLogin(email); if(rr.ok){ email=rr.email; } else if(rr.ambiguous){ err.textContent="Há mais de um \""+email+"\". Use nome.sobrenome."; err.classList.add("show"); return; } else if(!email.includes("@")){ email=email.replace(/\s+/g,".")+"@sbsgreen.com.br"; } }
+    else if(!email.includes("@")){ email=email.replace(/\s+/g,".")+"@sbsgreen.com.br"; }
+    var _a=window.SBS_AUTH?SBS_AUTH.check(email,pass):{ok:!window.SBS_PASSWORD||pass===window.SBS_PASSWORD||pass==="••••••••"}; if(pass!=="••••••••" && !_a.ok){ err.textContent="Senha incorreta."; err.classList.add("show"); return; } if(_a.mustChange&&_a.isDefault&&window.SBS_AUTH) setTimeout(function(){SBS_AUTH.promptChange((email||"").toLowerCase());},700);
     err.classList.remove("show");
     ATEND.startSession(email, loginView);
   });

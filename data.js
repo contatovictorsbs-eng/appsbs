@@ -17,7 +17,6 @@ window.DATA = {
   /* ---------- HOME shortcuts ---------- */
   shortcuts: [
     { id: "dashboard",   label: "Dashboard",        icon: "layout-dashboard", tag: "" },
-    { id: "ranking",     label: "Ranking & Conquistas", icon: "trophy",        tag: "" },
     { id: "visitas",     label: "Relatório de Visitas", icon: "map-pinned",    tag: "" },
     { id: "comercial",   label: "Política Comercial", icon: "scroll-text",      tag: "" },
     { id: "credito",     label: "Política de Crédito", icon: "landmark",        tag: "" },
@@ -37,7 +36,6 @@ window.DATA = {
   menu: [
     { id: "home",        label: "Home",                 icon: "house" },
     { id: "dashboard",   label: "Dashboard",            icon: "layout-dashboard" },
-    { id: "ranking",     label: "Ranking & Conquistas", icon: "trophy" },
     { id: "visitas",     label: "Relatório de Visitas", icon: "map-pinned" },
     { id: "comercial",   label: "Política Comercial",   icon: "scroll-text" },
     { id: "credito",     label: "Política de Crédito",  icon: "landmark" },

@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0B6B61">
 <template id="__bundler_thumbnail" data-bg-color="#0B6B61">
   <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
     <rect width="1200" height="800" fill="#0B6B61"/>
@@ -111,8 +113,57 @@
         <p>App de todos os funcionários: mural de comunicados, agenda, vagas internas e aniversários.</p>
         <span class="go">Acessar →</span>
       </a>
+      <a class="card" href="SBS Painel Inteligencia Mercado.html">
+        <span class="ic m"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12 18 7"/></svg></span>
+        <h2>Inteligência de Mercado</h2>
+        <p>Cotações e commodities, concorrentes monitorados, regiões e tendências do agronegócio.</p>
+        <span class="go">Acessar →</span>
+      </a>
     </div>
     <div class="foot">SBS Green Seeds · acesso restrito · governança SBS</div>
   </div>
+
+  <div id="pwa-banner" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:9000;background:#fff;border-top:1px solid #e6ebe9;box-shadow:0 -8px 30px rgba(0,0,0,.12);padding:14px 18px;display:flex;align-items:center;gap:14px;justify-content:center;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:12px">
+      <img src="assets/icon-192.png" alt="" style="width:42px;height:42px;border-radius:11px">
+      <div style="text-align:left">
+        <div style="font-weight:800;font-size:14px;color:#16201a">Instalar o app SBS Green</div>
+        <div style="font-size:12.5px;color:#6b7a74">Acesse direto da tela inicial do celular, sem navegador.</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button id="pwa-install" style="border:0;background:#0B6B61;color:#fff;font-weight:800;font-size:14px;padding:11px 20px;border-radius:11px;cursor:pointer;font-family:inherit">Instalar</button>
+      <button id="pwa-close" style="border:1.5px solid #e0e5e2;background:#fff;color:#6b7a74;font-weight:700;font-size:14px;padding:11px 16px;border-radius:11px;cursor:pointer;font-family:inherit">Agora não</button>
+    </div>
+  </div>
+  <div id="pwa-ios" style="display:none;position:fixed;left:14px;right:14px;bottom:14px;z-index:9000;background:#fff;border:1px solid #e6ebe9;border-radius:14px;box-shadow:0 -8px 30px rgba(0,0,0,.14);padding:14px 16px;font-size:13px;color:#16201a">
+    <b>Instalar no iPhone:</b> toque em <b>Compartilhar</b> e depois em <b>“Adicionar à Tela de Início”</b>.
+    <span id="pwa-ios-x" style="float:right;cursor:pointer;color:#6b7a74;font-weight:800">✕</span>
+  </div>
+
+  <script>
+  (function(){
+    if("serviceWorker" in navigator){ try{ navigator.serviceWorker.register("sw.js").catch(function(){}); }catch(e){} }
+    var deferred=null;
+    var dismissed=false; try{ dismissed=localStorage.getItem("pwa_dismiss")==="1"; }catch(e){}
+    var standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+    window.addEventListener("beforeinstallprompt", function(e){
+      e.preventDefault(); deferred=e;
+      if(!dismissed && !standalone) document.getElementById("pwa-banner").style.display="flex";
+    });
+    var inst=document.getElementById("pwa-install");
+    if(inst) inst.addEventListener("click", function(){
+      document.getElementById("pwa-banner").style.display="none";
+      if(deferred){ deferred.prompt(); deferred.userChoice.finally(function(){ deferred=null; }); }
+    });
+    var cl=document.getElementById("pwa-close");
+    if(cl) cl.addEventListener("click", function(){ document.getElementById("pwa-banner").style.display="none"; try{ localStorage.setItem("pwa_dismiss","1"); }catch(e){} });
+    // iOS (sem beforeinstallprompt)
+    var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+    if(isIOS && !standalone && !dismissed){ document.getElementById("pwa-ios").style.display="block"; }
+    var ix=document.getElementById("pwa-ios-x");
+    if(ix) ix.addEventListener("click", function(){ document.getElementById("pwa-ios").style.display="none"; try{ localStorage.setItem("pwa_dismiss","1"); }catch(e){} });
+  })();
+  </script>
 </body>
 </html>

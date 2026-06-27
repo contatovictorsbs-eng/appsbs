@@ -97,7 +97,7 @@ const PD = (function(){
       if(!email) return showErr("Informe seu usuário.");
       if(window.SBS_ORG){ const r=window.SBS_ORG.resolveLogin(email); if(r.ok) email=r.email; else if(r.ambiguous) return showErr("Há mais de um \""+email+"\". Use nome.sobrenome."); else if(!email.includes("@")) email=email.replace(/\s+/g,".")+"@sbsgreen.com.br"; }
       else if(!email.includes("@")) email=email.replace(/\s+/g,".")+"@sbsgreen.com.br";
-      if(pass!==window.SBS_PASSWORD) return showErr("Senha incorreta.");
+      var _a=window.SBS_AUTH?SBS_AUTH.check(email,pass):{ok:pass===window.SBS_PASSWORD}; if(!_a.ok) return showErr("Senha incorreta."); if(_a.mustChange&&_a.isDefault&&window.SBS_AUTH) setTimeout(function(){SBS_AUTH.promptChange((email||"").toLowerCase());},700);
       if(!canAccess(email)) return showErr("Acesso restrito à equipe de P&D.");
       startSession(email);
     });

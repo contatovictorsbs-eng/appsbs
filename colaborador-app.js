@@ -12,9 +12,7 @@ const COL = (function(){
     if((S.getCol("feed_posts")||[]).length) return;
     const now=Date.now(), H=3600000, D=86400000;
     S.setCol("feed_posts",[
-      { id:"fp1", autor:"Marina Alves", email:"marina.alves@sbsgreen.com.br", texto:"Stand da SBS bombando na Agrishow! Muito orgulho do nosso time 💚🌱", foto:"", ts:now-2*H, likes:["henrique.salles@sbsgreen.com.br","carlos.bento@sbsgreen.com.br","willian.luque@sbsgreen.com.br"], comentarios:[{autor:"Carlos Bento",texto:"Arrasaram!",ts:now-1*H}] },
-      { id:"fp2", autor:"Willian Luque", email:"willian.luque@sbsgreen.com.br", texto:"Visita de campo em Sinop — lavoura do cliente com a nossa semente ficou impecável.", foto:"", ts:now-1*D, likes:["marina.alves@sbsgreen.com.br","paula.andrade@sbsgreen.com.br"], comentarios:[] },
-      { id:"fp3", autor:"Paula Andrade", email:"paula.andrade@sbsgreen.com.br", texto:"Bem-vindo ao time, Marcos Vieira! 🎉 Que seja uma jornada incrível na SBS.", foto:"", ts:now-2*D, likes:["henrique.salles@sbsgreen.com.br","marina.alves@sbsgreen.com.br","willian.luque@sbsgreen.com.br","carlos.bento@sbsgreen.com.br"], comentarios:[{autor:"Marcos Vieira",texto:"Obrigado, equipe! Feliz demais de estar aqui.",ts:now-2*D+H}] }
+      { id:"fp1", autor:"Victor Hugo", email:"victor.hugo@sbsgreen.com.br", texto:"Bem-vindos ao Feed SBS! Compartilhe novidades e conquistas com o time.", foto:"", ts:now-2*H, likes:[], comentarios:[] }
     ]);
   }
 
@@ -29,8 +27,7 @@ const COL = (function(){
     if((S.getCol("rh_notificacoes")||[]).length) return;
     const now=Date.now(),H=3600000,D=86400000;
     S.setCol("rh_notificacoes",[
-      { id:"rn1", titulo:"Plano de saúde novo", texto:"A partir de julho todos os CLT têm o novo plano com cobertura nacional.", tipo:"beneficio", icon:"heart-pulse", ts:now-3*H, lidos:[] },
-      { id:"rn2", titulo:"Confraternização de meio de ano", texto:"Dia 25/07 em Cuiabá. Confirme presença com o RH!", tipo:"evento", icon:"party-popper", ts:now-1*D, lidos:[] }
+      { id:"rn1", titulo:"Notificação exemplo", texto:"Esta é uma notificação de exemplo enviada pelo RH.", tipo:"rh", icon:"bell", ts:now-3*H, lidos:[] }
     ]);
   }
 
@@ -235,9 +232,48 @@ const COL = (function(){
     }).join("") : `<div class="co-empty"><i data-lucide="bell-off"></i><div>Nenhuma notificação por enquanto.</div></div>`;
   }, mount(){ markAllRead(); paintBell(); } };
 
+  Screens.parami = { title:"Para mim", render(){
+    const mine=(S.getCol("rh_envios")||[]).filter(e=>me&&(e.email||"").toLowerCase()===me.email.toLowerCase()).sort((a,b)=>(b.ts||0)-(a.ts||0));
+    const TIP={teste:["Teste","brain"],documento:["Documento","file-text"],epi:["Termo EPI","hard-hat"]};
+    if(!mine.length) return `<div class="co-empty"><i data-lucide="inbox"></i><div>Nada do RH por enquanto.</div></div>`;
+    return mine.map(e=>{
+      const t=TIP[e.tipo]||TIP.documento; const done=e.status==="respondido"||e.status==="assinado";
+      return `<div class="co-card co-env" data-env="${e.id}">
+        <div class="co-env-h"><span class="co-env-ic"><i data-lucide="${t[1]}"></i></span><div><div class="co-env-t">${esc(e.titulo)}</div><div class="co-env-s">${t[0]} · do RH</div></div>${done?'<span class="co-env-ok"><i data-lucide="check-circle-2"></i></span>':'<span class="co-env-new">novo</span>'}</div>
+        ${e.mensagem?`<div class="co-env-m">${esc(e.mensagem)}</div>`:""}
+        ${done?`<div class="co-env-done">${e.tipo==="epi"?"Assinado":"Respondido"} ✓</div>`:`<button class="co-btn" data-resp="${e.id}"><i data-lucide="pen-line"></i> ${e.tipo==="epi"?"Assinar aceite":e.tipo==="teste"?"Responder":"Confirmar leitura"}</button>`}
+      </div>`;
+    }).join("");
+  }, mount(root){
+    root.querySelectorAll("[data-resp]").forEach(b=>b.addEventListener("click",()=>respond(b.dataset.resp)));
+  } };
+  function respond(id){
+    const e=(S.getCol("rh_envios")||[]).find(x=>x.id===id); if(!e) return;
+    if(e.tipo==="epi"){
+      if(!confirm("Declaro ter recebido e estar ciente do uso obrigatório dos EPIs descritos. Confirmar assinatura de aceite?")) return;
+      S.update("rh_envios",id,{status:"assinado",assinatura:{nome:(meRec()&&meRec().nome)||(me&&me.nome),quando:new Date().toLocaleString("pt-BR")}});
+      toast("Aceite assinado!");
+    } else if(e.tipo==="teste"){
+      // DISC simplificado: 4 perguntas rápidas
+      const d={D:0,I:0,S:0,C:0}; const Q=[["Sou direto e foco em resultado","D"],["Sou comunicativo e animado","I"],["Sou paciente e bom ouvinte","S"],["Sou analítico e detalhista","C"]];
+      let ok=true;
+      Q.forEach(q=>{ const v=prompt(q[0]+"\n\nDê uma nota de 0 a 100:","50"); if(v===null){ok=false;return;} d[q[1]]=Math.max(0,Math.min(100,parseInt(v)||0)); });
+      if(!ok) return;
+      S.update("rh_envios",id,{status:"respondido",disc:d});
+      toast("Teste enviado ao RH!");
+    } else {
+      const r=prompt("Confirmar leitura. Comentário (opcional):","Li e estou ciente.");
+      if(r===null) return;
+      S.update("rh_envios",id,{status:"respondido",respostaTexto:r});
+      toast("Confirmado!");
+    }
+    refresh();
+  }
+
   Screens.eu = { title:"Meus dados", render(){
     const r=meRec();
-    if(!r) return `<div class="co-empty"><i data-lucide="user"></i><div>Seu cadastro ainda não foi vinculado.<br>Fale com o RH para atualizar seus dados.</div></div>`;
+    const instBtn=`<button class="co-btn ghost" id="co-install" style="margin-top:10px"><i data-lucide="download"></i> Baixar o app SBS Colaborador</button>`;
+    if(!r) return `<div class="co-empty" style="padding-bottom:24px"><i data-lucide="user"></i><div>Seu cadastro ainda não foi vinculado.<br>Fale com o RH para atualizar seus dados.</div></div>${instBtn}<button class="co-btn ghost" id="co-logout"><i data-lucide="log-out"></i> Sair</button>`;
     const kv=(k,v)=>v?`<div class="co-kv"><div class="co-k">${k}</div><div class="co-v">${v}</div></div>`:"";
     return `<div class="co-profile">
       <span class="co-av xl" id="co-myav">${ini(r.nome)}</span>
@@ -251,12 +287,14 @@ const COL = (function(){
       ${kv("Aniversário",(r.aniversario||"").slice(3,5)+"/"+(r.aniversario||"").slice(0,2))}
       ${kv("E-mail",esc(r.email))}
     </div>
+    ${instBtn}
     <button class="co-btn ghost" id="co-logout"><i data-lucide="log-out"></i> Sair</button>`;
   }, mount(root){ const b=root.querySelector("#co-logout"); if(b) b.addEventListener("click",logout);
+    const inst=root.querySelector("#co-install"); if(inst) inst.addEventListener("click",function(){ window.SBS_INSTALL && window.SBS_INSTALL.prompt(); });
     const av=root.querySelector("#co-myav"); if(av&&window.SBS_AVATAR&&me) SBS_AVATAR.bind(av, me.email, {editable:true}); } };
 
   /* ---------------- navegação ---------------- */
-  const NAV=[["inicio","Início","home"],["feed","Feed","newspaper"],["mural","Mural","megaphone"],["agenda","Agenda","calendar-days"],["vagas","Vagas","briefcase"],["eu","Eu","user"]];
+  const NAV=[["inicio","Início","home"],["feed","Feed","newspaper"],["parami","Para mim","inbox"],["mural","Mural","megaphone"],["agenda","Agenda","calendar-days"],["vagas","Vagas","briefcase"],["eu","Eu","user"]];
   function go(id){
     if(!Screens[id]) id="inicio";
     current=id;
@@ -293,7 +331,7 @@ const COL = (function(){
       if(!email){ err.textContent="Informe seu usuário."; err.classList.add("show"); return; }
       if(window.SBS_ORG){ const rr=window.SBS_ORG.resolveLogin(email); if(rr.ok) email=rr.email; else if(rr.ambiguous){ err.textContent="Há mais de um \""+email+"\". Use nome.sobrenome."; err.classList.add("show"); return; } else if(!email.includes("@")) email=email.replace(/\s+/g,".")+"@sbsgreen.com.br"; }
       else if(!email.includes("@")) email=email.replace(/\s+/g,".")+"@sbsgreen.com.br";
-      if(window.SBS_PASSWORD && pass!==window.SBS_PASSWORD){ err.textContent="Senha incorreta."; err.classList.add("show"); return; }
+      var _a=window.SBS_AUTH?SBS_AUTH.check(email,pass):{ok:!window.SBS_PASSWORD||pass===window.SBS_PASSWORD}; if(!_a.ok){ err.textContent="Senha incorreta."; err.classList.add("show"); return; } if(_a.mustChange&&_a.isDefault&&window.SBS_AUTH) setTimeout(function(){SBS_AUTH.promptChange((email||"").toLowerCase());},700);
       err.classList.remove("show");
       startSession(email);
     });

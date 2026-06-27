@@ -428,7 +428,7 @@ document.getElementById("login-form").addEventListener("submit",e=>{
     else if(!email.includes("@")){ email = email.replace(/\s+/g,".")+"@sbsgreen.com.br"; }
   } else if(!email.includes("@")){ email = email.replace(/\s+/g,".")+"@sbsgreen.com.br"; }
   if(!isAuthorized(email)){ loginErr("Usuário não autorizado. Solicite acesso à governança SBS."); return; }
-  if(pass!==window.SBS_PASSWORD){ loginErr("Senha incorreta."); return; }
+  var _a=window.SBS_AUTH?SBS_AUTH.check(email,pass):{ok:pass===window.SBS_PASSWORD}; if(!_a.ok){ loginErr("Senha incorreta."); return; } if(_a.mustChange&&_a.isDefault&&window.SBS_AUTH) setTimeout(function(){SBS_AUTH.promptChange((email||"").toLowerCase());},700);
   try{ localStorage.setItem("sbs_user",email); }catch(e){}
   applyUser(email); hideLogin(); go("home");
   window.Gam && window.Gam.award("login");

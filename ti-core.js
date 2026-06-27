@@ -13,6 +13,7 @@ const TI = (function(){
   const TI_EMAILS = ["comercial@sbsgreen.com.br","green.mobile@sbsgreen.com.br"];
   function canAccess(email){
     if(TI_EMAILS.includes(email)) return true;
+    if((window.SBS_MASTER||[]).includes((email||"").toLowerCase())) return true;
     const u = (S.getCol("usuarios")||[]).find(x=>(x.email||"").toLowerCase()===email);
     if(!u) return false;
     return u.perfil==="Administrador" || /t\.?i\.?|tecnolog/i.test(u.perfil||"");
@@ -26,6 +27,10 @@ const TI = (function(){
     { id:"plataformas", label:"Plataformas",      icon:"layout-grid" },
     { id:"integracoes", label:"Integrações",      icon:"git-compare" },
     { id:"painres",  label:"Painéis & Apps",     icon:"grid-3x3" },
+    { id:"acessos",  label:"Acessos & Senhas",   icon:"lock" },
+    { id:"manutencao", label:"Manutenção",        icon:"brush-cleaning" },
+    { id:"projetos",  label:"Centro de Projetos", icon:"folder-kanban" },
+    { id:"pesquisa",  label:"Pesquisa de Tecnologia", icon:"clipboard-list" },
     { id:"changelog",label:"Versões / Changelog",icon:"history" },
     { sec:"Ajuda" },
     { id:"ajuda",    label:"Central de Ajuda",   icon:"circle-help" },
@@ -124,7 +129,7 @@ const TI = (function(){
         else if(r.ambiguous){ return showErr("Há mais de um \""+email+"\". Use nome.sobrenome."); }
         else if(!email.includes("@")){ email = email.replace(/\s+/g,".")+"@sbsgreen.com.br"; }
       } else if(!email.includes("@")){ email = email.replace(/\s+/g,".")+"@sbsgreen.com.br"; }
-      if(pass!==window.SBS_PASSWORD){ return showErr("Senha incorreta."); }
+      var _a=window.SBS_AUTH?SBS_AUTH.check(email,pass):{ok:pass===window.SBS_PASSWORD}; if(!_a.ok){ return showErr("Senha incorreta."); } if(_a.mustChange&&_a.isDefault&&window.SBS_AUTH) setTimeout(function(){SBS_AUTH.promptChange((email||"").toLowerCase());},700);
       if(!canAccess(email)){ return showErr("Acesso restrito ao setor de T.I."); }
       startSession(email);
     });

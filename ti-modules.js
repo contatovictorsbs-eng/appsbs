@@ -296,7 +296,7 @@
     label:"Plataformas do Sistema",
     render(){
       var plats = (window.SBS_PLAT ? SBS_PLAT.list() : []);
-      var ICON = { vendedor:"smartphone", gerencial:"layout-dashboard", ti:"cpu", ceo:"line-chart", atendimento:"headset", marketing:"megaphone", pd:"flask-conical", rh:"users", colaborador:"id-card" };
+      var ICON = { vendedor:"smartphone", gerencial:"layout-dashboard", ti:"cpu", ceo:"line-chart", atendimento:"headset", marketing:"megaphone", pd:"flask-conical", rh:"users", colaborador:"id-card", mercado:"radar" };
       var DESC = {
         vendedor:"App da força de vendas (campo).",
         gerencial:"Gestão comercial e conteúdo do app.",
@@ -306,7 +306,8 @@
         marketing:"Campanhas, materiais, conteúdo e eventos.",
         pd:"Pesquisa, ensaios, cultivares e inovação.",
         rh:"Recrutamento, seleção e endomarketing.",
-        colaborador:"App do funcionário: mural, agenda, vagas, aniversários."
+        colaborador:"App do funcionário: mural, agenda, vagas, aniversários.",
+        mercado:"Cotações, concorrentes, regiões e tendências do agro."
       };
       var on = plats.filter(function(p){ return p.enabled!==false; }).length;
       return `

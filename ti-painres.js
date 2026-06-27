@@ -23,7 +23,9 @@
     { id:"vendedor", nome:"Portal do Vendedor", arq:"SBS Portal do Vendedor.html", cor:"#0B6B61", icon:"smartphone",
       mods:["Dashboard","Pedidos","Preços","Comissão","Frete","Clientes & Rotas","Campanhas","Materiais","Reclamações","Marketing"] },
     { id:"colaborador", nome:"Portal do Colaborador", arq:"SBS Portal do Colaborador.html", cor:"#0E9B8E", icon:"id-card",
-      mods:["Início","Feed (rede social)","Mural","Agenda","Vagas internas","Notificações","Meus dados"] }
+      mods:["Início","Feed (rede social)","Mural","Agenda","Vagas internas","Notificações","Meus dados"] },
+    { id:"mercado", nome:"Inteligência de Mercado", arq:"SBS Painel Inteligencia Mercado.html", cor:"#0B6B61", icon:"radar",
+      mods:["Visão Geral","Cotações & Commodities","Concorrentes","Regiões & Mercado","Tendências & Alertas","Central de Ajuda"] }
   ];
 
   function platOn(id){ if(!window.SBS_PLAT) return true; return SBS_PLAT.isEnabled(id); }
@@ -32,7 +34,7 @@
     label:"Painéis & Apps",
     render(){
       return `
-      <div class="ti-note info" style="margin-bottom:18px"><i data-lucide="key-round"></i> Acesso master da T.I. — abra qualquer painel ou app e todos os seus módulos. A T.I. enxerga e gerencia o sistema inteiro.</div>
+      <div class="ti-note info" style="margin-bottom:18px"><i data-lucide="key-round"></i> Acesso master da T.I. Marque/desmarque os módulos para <b>ligar/desligar funcionalidades</b> de cada plataforma em tempo real. Abra qualquer painel ou app pelo ícone.</div>
       <div class="ti-launch">
         ${PLATS.map(p=>{
           const on=platOn(p.id);
@@ -41,10 +43,19 @@
               <div class="ti-lc-t"><div class="ti-lc-n">${esc(p.nome)}</div><div class="ti-lc-s ${on?'on':'off'}">${on?'Ativa':'Em manutenção'}</div></div>
               <a class="ti-lc-go" href="${encodeURI(p.arq)}" target="_blank" rel="noopener" title="Abrir"><i data-lucide="external-link"></i></a>
             </div>
-            <div class="ti-lc-mods">${p.mods.map(m=>`<span class="ti-lc-mod">${esc(m)}</span>`).join("")}</div>
+            <div class="ti-lc-mods">${p.mods.map(m=>{ const off=window.SBS_VIS&&SBS_VIS.isOff(p.id,m); return `<label class="ti-vis-mod${off?' off':''}"><input type="checkbox" data-vis-plat="${p.id}" data-vis-mod="${esc(m)}" ${off?'':'checked'}> ${esc(m)}</label>`; }).join("")}</div>
           </div>`;
         }).join("")}
       </div>`;
+    },
+    mount(c){
+      (c||document).querySelectorAll("[data-vis-mod]").forEach(function(inp){
+        inp.addEventListener("change",function(){
+          if(window.SBS_VIS) SBS_VIS.setOff(inp.dataset.visPlat, inp.dataset.visMod, !inp.checked);
+          inp.closest(".ti-vis-mod").classList.toggle("off", !inp.checked);
+          TI.toast(inp.checked?"Módulo ligado":"Módulo desligado");
+        });
+      });
     }
   };
 })();

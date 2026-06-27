@@ -52,6 +52,11 @@
   to = "/SBS Portal do Colaborador.html"
   status = 200
 
+[[redirects]]
+  from = "/mercado"
+  to = "/SBS Painel Inteligencia Mercado.html"
+  status = 200
+
 # cabeçalhos de segurança básicos
 [[headers]]
   for = "/*"
