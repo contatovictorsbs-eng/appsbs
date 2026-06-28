@@ -6,6 +6,13 @@
 [build]
   publish = "."
 
+# raiz sempre abre o hub (index)
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+  force = true
+
 # URLs amigáveis (atalhos) → arquivos reais
 [[redirects]]
   from = "/vendedor"
