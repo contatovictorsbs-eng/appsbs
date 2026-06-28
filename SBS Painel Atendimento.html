@@ -190,19 +190,7 @@
         <span class="go">Acessar →</span>
       </a>
     </div>
-    <div class="envbar" id="envbar">
-      <div class="env-l">
-        <span class="env-badge" id="env-badge">PRODUÇÃO</span>
-        <span class="env-txt" id="env-txt">Você está no ambiente real. Use a Homologação para testar antes de publicar.</span>
-      </div>
-      <div class="env-actions">
-        <button class="env-btn enter" id="env-enter">Entrar na Homologação</button>
-        <button class="env-btn exit" id="env-exit">Voltar para Produção</button>
-        <a class="env-btn guide" href="Homologação - Guia.html">Guia de validação</a>
-      </div>
-    </div>
-
-    <div class="foot">SBS Green Seeds · acesso restrito · governança SBS</div>
+    <div class="foot">SBS Green Seeds · acesso restrito · governança SBS · <span id="ver-tag">v—</span></div>
   </div>
 
   <div id="pwa-banner" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:9000;background:#fff;border-top:1px solid #e6ebe9;box-shadow:0 -8px 30px rgba(0,0,0,.12);padding:14px 18px;display:flex;align-items:center;gap:14px;justify-content:center;flex-wrap:wrap">
@@ -293,22 +281,10 @@
     if(dlModal) dlModal.addEventListener("click", function(e){ if(e.target===dlModal) closeModal(); });
   })();
   </script>
-  <script src="sbs-ambiente.js"></script>
   <script>
-  (function(){
-    var env = window.SBS_ENV || { isHomolog:false };
-    var badge=document.getElementById("env-badge"), txt=document.getElementById("env-txt");
-    var bEnter=document.getElementById("env-enter"), bExit=document.getElementById("env-exit");
-    if(env.isHomolog){
-      badge.textContent="HOMOLOGAÇÃO"; badge.classList.add("homolog");
-      txt.textContent="Ambiente de testes — os dados aqui NÃO afetam a produção. Os links abaixo já abrem em homologação.";
-      bEnter.style.display="none";
-    } else {
-      bExit.style.display="none";
-    }
-    bEnter && (bEnter.onclick=function(){ env.entrarHomolog ? env.entrarHomolog() : (localStorage.setItem("sbs_env","homolog"), location.reload()); });
-    bExit  && (bExit.onclick =function(){ env.sairHomolog ? env.sairHomolog() : (localStorage.removeItem("sbs_env"), location.reload()); });
-  })();
+    /* marcador de versão do hub — atualize a cada publicação */
+    window.SBS_VERSION = "1.4.0 · 28/06/2026";
+    (function(){ var t=document.getElementById("ver-tag"); if(t) t.textContent="v"+window.SBS_VERSION; })();
   </script>
 </body>
 </html>
