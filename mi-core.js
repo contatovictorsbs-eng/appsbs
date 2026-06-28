@@ -20,6 +20,7 @@ const MI = (function(){
   function canAccess(email){
     const org = window.SBS_ORG && window.SBS_ORG.get(email);
     if(org && (org.papel==="admin"||org.papel==="ti"||org.papel==="ceo"||org.papel==="nacional")) return true;
+    if(org && org.paineis && org.paineis.indexOf("mi")>=0) return true;
     if(/mercado|intelig|comercial|marketing/i.test((org&&org.papel)||"")) return true;
     const u = (S.getCol("usuarios")||[]).find(x=>(x.email||"").toLowerCase()===email);
     return !!(u && (u.perfil==="Administrador" || /mercado|intelig|comercial|marketing/i.test(u.perfil||"")));
@@ -28,9 +29,14 @@ const MI = (function(){
   const NAV = [
     { sec:"Inteligência de Mercado" },
     { id:"visao",        label:"Visão Geral",        icon:"gauge" },
+    { id:"insights",     label:"Insights de Vendas", icon:"lightbulb" },
     { id:"cotacoes",     label:"Cotações & Commodities", icon:"trending-up" },
     { id:"clima",        label:"Clima & Safra",      icon:"cloud-sun" },
+    { id:"calendario",   label:"Calendário Agrícola", icon:"calendar-days" },
     { id:"concorrentes", label:"Concorrentes",       icon:"swords" },
+    { id:"robo",         label:"Robô de Monitoramento", icon:"bot" },
+    { id:"fontes",       label:"Fontes de Monitoramento", icon:"radio" },
+    { id:"coletor",      label:"Coletor (automação)", icon:"download-cloud" },
     { id:"regioes",      label:"Regiões & Mercado",  icon:"map" },
     { id:"tendencias",   label:"Tendências & Alertas", icon:"radar" },
     { id:"alertas",      label:"Alertas & Automações", icon:"bell-ring" },

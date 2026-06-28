@@ -1,73 +1,334 @@
-# ===========================================================
-# SBS Green Seeds — configuração de publicação (Netlify)
-# Site estático. URLs amigáveis para os três sistemas.
-# ===========================================================
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SBS Green Seeds · Central de Atendimento</title>
+<meta name="sbs-platform" content="atendimento">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<template id="__bundler_thumbnail" data-bg-color="#15171A">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#15171A"/>
+    <rect x="455" y="300" width="290" height="200" rx="26" fill="none" stroke="#0E9B8E" stroke-width="20"/>
+    <path d="M520 500 l-30 60 90 -40" fill="#0E9B8E"/>
+    <circle cx="560" cy="400" r="14" fill="#8C2740"/><circle cx="620" cy="400" r="14" fill="#0E9B8E"/><circle cx="680" cy="400" r="14" fill="#C07A12"/>
+  </svg>
+</template>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:"Public Sans",system-ui,sans-serif;color:#1A1D21;background:#F1F2F4}
+  .hidden{display:none!important}
+  textarea,input,select,button{font-family:inherit}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#D6D9DD;border-radius:8px;border:3px solid transparent;background-clip:content-box}
+  ::-webkit-scrollbar-track{background:transparent}
 
-[build]
-  publish = "."
+  /* LOGIN */
+  .login{height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 120% at 80% 0%,#1d2024 0%,#101113 55%,#0b0c0d 100%);padding:24px}
+  .login-card{width:420px;max-width:100%;background:#fff;border-radius:18px;box-shadow:0 30px 70px rgba(0,0,0,.45);overflow:hidden}
+  .login-head{padding:30px 32px 24px;text-align:center;border-bottom:1px solid #EDEEF0}
+  .login-logo{width:46px;height:46px;border-radius:12px;background:linear-gradient(150deg,#0E9B8E,#8C2740);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+  .login-head h1{font-size:19px;font-weight:800;letter-spacing:-.4px}
+  .login-head p{font-size:12.5px;color:#8A9099;font-weight:500;margin-top:3px}
+  .login-body{padding:24px 32px 28px}
+  .login-body label{display:block;font-size:12px;font-weight:700;color:#4A4F56;margin-bottom:7px}
+  .login-body input{width:100%;border:1px solid #DEE0E3;border-radius:10px;padding:11px 13px;font-size:13.5px;color:#1A1D21;outline:none;margin-bottom:15px}
+  .login-body input:focus{border-color:#15171A}
+  .choice{display:flex;gap:10px;margin-bottom:20px}
+  .choice button{flex:1;border:2px solid #E4E6E9;background:#fff;border-radius:12px;padding:13px 12px;cursor:pointer;text-align:left}
+  .choice button.on{border-color:#15171A;background:#F7F8F9}
+  .choice button svg{width:20px;height:20px;stroke:#8A9099}
+  .choice button.on svg{stroke:#15171A}
+  .choice .t{font-size:13.5px;font-weight:700;margin-top:7px}
+  .choice .d{font-size:11px;color:#8A9099;font-weight:500;line-height:1.35;margin-top:2px}
+  .login-body .err{min-height:16px;font-size:12px;font-weight:700;color:#C0392B;margin-bottom:8px;display:none}
+  .login-body .err.show{display:block}
+  .login-body .enter{width:100%;border:none;background:#15171A;color:#fff;font-size:14px;font-weight:700;padding:13px;border-radius:11px;cursor:pointer}
+  .login-body .enter:hover{background:#000}
 
-# raiz sempre abre o hub (index)
-[[redirects]]
-  from = "/"
-  to = "/index.html"
-  status = 200
-  force = true
+  /* APP SHELL */
+  .app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+  .topbar{height:56px;flex:none;background:#15171A;display:flex;align-items:center;gap:16px;padding:0 18px;color:#fff}
+  .tb-brand{display:flex;align-items:center;gap:11px}
+  .tb-logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(150deg,#0E9B8E,#8C2740);display:flex;align-items:center;justify-content:center}
+  .tb-title{line-height:1.15;white-space:nowrap}
+  .tb-title .t1{font-size:14.5px;font-weight:700;letter-spacing:-.2px}
+  .tb-title .t2{font-size:11px;color:#8B9097;font-weight:500}
+  .tb-tabs{display:flex;gap:3px;background:#23262B;border:1px solid #33373D;border-radius:9px;padding:3px;margin-left:14px}
+  .tb-tabs button{border:none;background:transparent;color:#9197A0;font-size:12.5px;font-weight:600;padding:6px 15px;border-radius:7px;cursor:pointer;display:flex;align-items:center;gap:7px}
+  .tb-tabs button.on{background:#15171A;color:#fff;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+  .tb-tabs button i{width:15px;height:15px}
+  .tb-spacer{flex:1}
+  .tb-status{display:flex;align-items:center;gap:8px;background:#23262B;border:1px solid #33373D;padding:5px 11px;border-radius:8px}
+  .tb-status span.dot{width:7px;height:7px;border-radius:50%;background:#3FD07A;box-shadow:0 0 0 3px rgba(63,208,122,.18)}
+  .tb-status span.t{font-size:12.5px;font-weight:600;color:#E7E9EC}
+  .tb-agent{display:flex;align-items:center;gap:10px;padding-left:6px}
+  .tb-agent .meta{text-align:right;line-height:1.2}
+  .tb-agent select{border:1px solid #33373D;background:#23262B;color:#E7E9EC;font-size:12px;font-weight:600;border-radius:7px;padding:4px 6px;cursor:pointer;max-width:190px}
+  .tb-agent .role{font-size:10.5px;color:#8B9097;margin-top:2px}
+  .tb-agent .av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:#fff}
+  .tb-agent .out{border:none;background:#23262B;color:#9197A0;width:34px;height:34px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .tb-agent .out:hover{background:#33373D;color:#E7E9EC}
+  .content{flex:1;min-height:0;display:flex}
 
-# URLs amigáveis (atalhos) → arquivos reais
-[[redirects]]
-  from = "/vendedor"
-  to = "/SBS Portal do Vendedor.html"
-  status = 200
+  /* ===== OPERACIONAL ===== */
+  .ax-wrap{flex:1;display:flex;min-height:0;width:100%}
+  .ax-side{width:222px;flex:none;background:#FAFBFB;border-right:1px solid #E4E6E9;padding:16px 12px;overflow:auto}
+  .ax-side-sec{font-size:10.5px;font-weight:700;letter-spacing:.7px;color:#8A9099;text-transform:uppercase;padding:0 8px 8px}
+  .ax-brand{width:100%;display:flex;align-items:center;gap:10px;padding:8px 9px;border:none;background:transparent;border-radius:8px;cursor:pointer;margin-bottom:2px;text-align:left;color:#3A4048;font-weight:600;font-size:13px}
+  .ax-brand:hover{background:#EFF0F2}
+  .ax-brand.on{background:#15171A;color:#fff}
+  .ax-dot{width:10px;height:10px;border-radius:3px;flex:none}
+  .ax-dot.sm{width:8px;height:8px;display:inline-block;vertical-align:middle;margin-right:5px}
+  .ax-brand-n{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ax-brand-c{font-size:11.5px;font-weight:700;color:#9197A0;font-variant-numeric:tabular-nums}
+  .ax-brand.on .ax-brand-c{color:#C8CCD2}
+  .ax-stat{display:block;width:100%;text-align:left;border:none;background:transparent;padding:7px 9px;border-radius:8px;font-size:12.5px;font-weight:600;color:#5B6470;cursor:pointer;margin-bottom:1px}
+  .ax-stat:hover{background:#EFF0F2}
+  .ax-stat.on{background:#E3F4F1;color:#0B6B61}
 
-[[redirects]]
-  from = "/painel"
-  to = "/SBS Painel Gerencial.html"
-  status = 200
+  .ax-list{width:322px;flex:none;background:#fff;border-right:1px solid #E4E6E9;display:flex;flex-direction:column;min-height:0}
+  .ax-search{display:flex;align-items:center;gap:9px;padding:12px 14px;border-bottom:1px solid #EDEEF0}
+  .ax-search i{width:16px;height:16px;color:#9197A0}
+  .ax-search input{border:none;outline:none;flex:1;font-size:13.5px}
+  .ax-rows{flex:1;overflow:auto}
+  .ax-row{position:relative;display:flex;width:100%;border:none;background:#fff;border-bottom:1px solid #F2F3F4;padding:12px 14px 12px 16px;cursor:pointer;text-align:left;gap:0}
+  .ax-row:hover{background:#FAFBFB}
+  .ax-row.on{background:#F4F9F8}
+  .ax-row-bar{position:absolute;left:0;top:0;bottom:0;width:3px}
+  .ax-row-main{flex:1;min-width:0}
+  .ax-row-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+  .ax-row-name{font-size:13.5px;font-weight:700;color:#1A1D21;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ax-row-time{font-size:11px;color:#9197A0;flex:none}
+  .ax-row-snip{font-size:12.5px;color:#6B7178;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ax-row-meta{display:flex;align-items:center;gap:7px;margin-top:7px}
+  .ax-chip{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:20px}
+  .ax-chip i{width:11px;height:11px}
+  .ax-srow{font-size:10.5px;font-weight:700}
+  .ax-unread{margin-left:auto;background:#0E9B8E;color:#fff;font-size:10.5px;font-weight:800;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 5px}
+  .ax-empty{padding:30px 18px;text-align:center;color:#9197A0;font-size:13px}
 
-[[redirects]]
-  from = "/ti"
-  to = "/SBS Painel T.I.html"
-  status = 200
+  .ax-detail{flex:1;min-width:0;display:flex;flex-direction:column;background:#F7F8F9}
+  .ax-nodetail{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#A8AEB5;gap:10px;font-size:13.5px}
+  .ax-nodetail i{width:34px;height:34px}
+  .ax-dh{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:#fff;border-bottom:1px solid #EDEEF0}
+  .ax-dh-l{display:flex;align-items:center;gap:12px;min-width:0}
+  .ax-dh-av{width:40px;height:40px;border-radius:11px;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex:none}
+  .ax-dh-name{font-size:15px;font-weight:700;color:#1A1D21}
+  .ax-dh-org{font-size:13px;color:#8A9099;font-weight:500}
+  .ax-dh-sub{font-size:12px;color:#6B7178;margin-top:2px;display:flex;align-items:center;gap:2px}
+  .ax-ic{width:13px;height:13px;vertical-align:-2px}
+  .ax-badge{font-size:11px;font-weight:800;padding:5px 11px;border-radius:20px}
+  .ax-tags{display:flex;flex-wrap:wrap;gap:6px;padding:11px 20px 0}
+  .ax-tag{font-size:11px;font-weight:700;padding:4px 9px;border-radius:6px}
+  .ax-thread{flex:1;overflow:auto;padding:18px 20px;display:flex;flex-direction:column;gap:9px}
+  .ax-msg{display:flex}
+  .ax-msg.me{justify-content:flex-end}
+  .ax-bubble{max-width:74%;padding:10px 13px;border-radius:13px;font-size:13.5px;line-height:1.5;position:relative}
+  .ax-msg.them .ax-bubble{background:#fff;border:1px solid #EAEBED;border-bottom-left-radius:4px;color:#1A1D21}
+  .ax-msg.me .ax-bubble{background:#15171A;color:#fff;border-bottom-right-radius:4px}
+  .ax-time{display:block;font-size:10px;opacity:.6;margin-top:4px;text-align:right}
+  .ax-reply{border-top:1px solid #EDEEF0;background:#fff;padding:12px 16px}
+  .ax-reply textarea{width:100%;border:1px solid #E0E2E5;border-radius:11px;padding:11px 13px;font-size:13.5px;resize:none;height:62px;outline:none}
+  .ax-reply textarea:focus{border-color:#15171A}
+  .ax-reply-acts{display:flex;align-items:center;justify-content:space-between;margin-top:9px}
+  .ax-reply-l{display:flex;gap:8px}
+  .ax-appbar{border-top:1px solid #EDEEF0;background:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12.5px;color:#6B7178}
+  .ax-appbar i{width:14px;height:14px;vertical-align:-2px}
+  .ax-btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:9px;padding:9px 14px;font-size:12.5px;font-weight:700;cursor:pointer}
+  .ax-btn i{width:14px;height:14px}
+  .ax-btn.send{background:#0E9B8E;color:#fff}
+  .ax-btn.send:hover{background:#0c8a7e}
+  .ax-btn.ghost{background:#F1F2F4;color:#3A4048}
+  .ax-btn.ghost:hover{background:#E7E9EC}
+  .ax-btn.ghost.ok{background:#E4F5EC;color:#0B8A5E}
+  .ax-btn.ok{background:#0B8A5E;color:#fff}
+  .ax-btn.sm{padding:6px 11px;font-size:11.5px}
 
-[[redirects]]
-  from = "/ceo"
-  to = "/SBS Painel CEO.html"
-  status = 200
+  /* ===== GERENCIAL ===== */
+  .ax-ger{flex:1;display:flex;flex-direction:column;min-height:0;width:100%}
+  .ax-gtabs{display:flex;gap:4px;padding:14px 22px 0;background:#fff;border-bottom:1px solid #E4E6E9}
+  .ax-gtab{border:none;background:transparent;color:#6B7178;font-size:13px;font-weight:600;padding:10px 14px;border-radius:9px 9px 0 0;cursor:pointer;display:flex;align-items:center;gap:7px;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .ax-gtab i{width:15px;height:15px}
+  .ax-gtab.on{color:#15171A;border-bottom-color:#0E9B8E}
+  .ax-gbody{flex:1;overflow:auto;padding:22px}
+  .ax-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:18px}
+  .ax-kpi{background:#fff;border:1px solid #E7E9EC;border-radius:14px;padding:16px}
+  .ax-kpi-ic{width:36px;height:36px;border-radius:10px;background:#EEF0F2;color:#5B6470;display:flex;align-items:center;justify-content:center}
+  .ax-kpi-ic i{width:18px;height:18px}
+  .ax-kpi.ok .ax-kpi-ic{background:#E4F5EC;color:#0B8A5E}
+  .ax-kpi.warn .ax-kpi-ic{background:#FBEFE0;color:#C0710F}
+  .ax-kpi-v{font-size:24px;font-weight:800;margin-top:11px}
+  .ax-kpi-l{font-size:12.5px;color:#8A9099;margin-top:2px}
+  .ax-gcols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .ax-card{background:#fff;border:1px solid #E7E9EC;border-radius:14px;padding:18px;margin-bottom:16px}
+  .ax-card-h{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:14px}
+  .ax-card-h i{width:16px;height:16px;color:#5B6470}
+  .ax-brow{margin-bottom:12px}
+  .ax-brow-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+  .ax-brbar{height:7px;background:#EEF0F2;border-radius:6px;overflow:hidden}
+  .ax-brbar span{display:block;height:100%;border-radius:6px}
+  .ax-li{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #F2F3F4;font-size:13px}
+  .ax-li:last-child{border-bottom:0}
+  .ax-table{display:flex;flex-direction:column}
+  .ax-trow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #F2F3F4;font-size:13px}
+  .ax-trow:last-child{border-bottom:0}
+  .ax-tch{font-weight:700;min-width:140px;display:flex;align-items:center;gap:6px}
+  .ax-tid{flex:1;color:#6B7178;font-variant-numeric:tabular-nums}
+  .ax-tbr{color:#8A9099;min-width:120px}
+  .ax-tbrs{display:flex;gap:5px;flex-wrap:wrap;min-width:160px}
+  .ax-cstat{font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;min-width:92px;text-align:center}
+  .ax-cstat.on{background:#E4F5EC;color:#0B8A5E}
+  .ax-cstat.off{background:#FBEFE0;color:#C0710F}
+  .ax-ag-av{width:30px;height:30px;border-radius:9px;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex:none}
+  .ax-mini{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px}
+  .ax-rk{min-width:220px}
+  .ax-rr{flex:1;color:#5B6470;display:flex;align-items:center;gap:6px}
+  .ax-sw{position:relative;width:40px;height:23px;flex:none;cursor:pointer}
+  .ax-sw input{opacity:0;width:0;height:0;position:absolute}
+  .ax-sw span{position:absolute;inset:0;background:#CFD4DA;border-radius:20px;transition:.15s}
+  .ax-sw span::before{content:"";position:absolute;width:17px;height:17px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.15s}
+  .ax-sw input:checked + span{background:#0E9B8E}
+  .ax-sw input:checked + span::before{transform:translateX(17px)}
+  .ax-note{display:flex;align-items:flex-start;gap:8px;background:#F4F6F7;border-radius:11px;padding:12px 14px;font-size:12.5px;color:#5B6470;line-height:1.5;margin-top:6px}
+  .ax-note i{width:15px;height:15px;flex:none;margin-top:1px;color:#8A9099}
+  .ax-muted{color:#8A9099;font-weight:600}
+  .ax-trow.head{font-size:11px;font-weight:800;color:#8A9099;text-transform:uppercase;letter-spacing:.04em}
+  .ax-trow .r{margin-left:auto;min-width:96px;text-align:right;font-variant-numeric:tabular-nums}
+  .ax-trow .r + .r{margin-left:0}
+  .sla-bad{color:#b3261e;font-weight:800}
+  .sla-cfg{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+  .sla-cfg label{font-size:13px;color:#5B6470;font-weight:600;display:flex;align-items:center;gap:7px}
+  .sla-cfg input{width:74px;border:1.5px solid #E7E9EC;border-radius:9px;padding:8px 10px;font-family:inherit;font-size:13px}
+  .nps-bar{display:flex;height:16px;border-radius:8px;overflow:hidden;background:#F2F3F4}
+  .nps-bar span{display:block;height:100%}
+  .nps-leg{display:flex;gap:16px;margin-top:10px;font-size:12px;color:#5B6470}
+  .nps-leg span{display:inline-flex;align-items:center;gap:6px}
+  .nps-sw{width:12px;height:12px;border-radius:4px;display:inline-block}
+  .nps-cm{padding:11px 0;border-bottom:1px solid #F2F3F4}
+  .nps-cm:last-child{border-bottom:0}
+  .nps-cm-top{font-size:12.5px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .nps-cm-x{font-size:13px;color:#3A4047;margin-top:4px;line-height:1.5}
+  .nps-badge{font-size:11px;font-weight:800;color:#fff;border-radius:6px;padding:1px 7px}
+  .nps-badge.prom,.nps-cm.prom .nps-badge{background:#0B8A5E}
+  .nps-badge.neu{background:#C0710F}.nps-badge.det{background:#b3261e}
+  .nps-ov{position:fixed;inset:0;background:rgba(10,12,14,.55);display:none;align-items:center;justify-content:center;z-index:90}
+  .nps-ov.show{display:flex}
+  .nps-modal{background:#fff;border-radius:16px;width:min(460px,92vw);padding:0;overflow:hidden}
+  .nps-mh{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid #EEF0F2}
+  .nps-mh b{font-size:15px}
+  .nps-x{border:0;background:none;font-size:24px;line-height:1;color:#8A9099;cursor:pointer}
+  #nps-mb{padding:18px}
+  .nps-q{font-size:14px;font-weight:700;margin-bottom:12px}
+  .nps-scale{display:grid;grid-template-columns:repeat(11,1fr);gap:5px;margin-bottom:14px}
+  .nps-n{border:1.5px solid #E7E9EC;background:#fff;border-radius:8px;padding:9px 0;font-weight:800;font-size:13px;cursor:pointer;color:#5B6470}
+  .nps-n.p{color:#0B8A5E}.nps-n.d{color:#b3261e}
+  .nps-n.on{background:#15171A;color:#fff;border-color:#15171A}
+  .nps-cli,.nps-cmt{width:100%;border:1.5px solid #E7E9EC;border-radius:10px;padding:10px 12px;font-family:inherit;font-size:13px;margin-bottom:10px}
+  .nps-cmt{min-height:64px;resize:vertical}
+  .nps-foot{display:flex;justify-content:space-between;align-items:center}
 
-[[redirects]]
-  from = "/atendimento"
-  to = "/SBS Painel Atendimento.html"
-  status = 200
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#15171A;color:#fff;border-radius:11px;padding:11px 18px;display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;box-shadow:0 12px 34px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:.2s;z-index:9999}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast i{width:17px;height:17px;color:#3FD07A}
+  @media(max-width:1000px){.ax-gcols{grid-template-columns:1fr}.ax-side{width:150px}}
+</style>
+</head>
+<body>
 
-[[redirects]]
-  from = "/marketing"
-  to = "/SBS Painel Marketing.html"
-  status = 200
+  <!-- LOGIN -->
+  <div class="login" id="login">
+    <div class="login-card">
+      <div class="login-head">
+        <div class="login-logo"><svg width="22" height="22" viewBox="0 0 24 24"><ellipse cx="12" cy="11" rx="6.2" ry="9.2" transform="rotate(-18 12 12)" fill="#fff"></ellipse></svg></div>
+        <h1>Central de Atendimento</h1>
+        <p>Nobre Brasil · SBS Green Seeds · SememBrás</p>
+      </div>
+      <div class="login-body">
+        <form id="login-form" novalidate>
+          <label>E-mail</label>
+          <input id="lg-email" type="text" autocapitalize="none" spellcheck="false" value="ana.paula@grupo.com.br" placeholder="seu@email.com">
+          <label>Senha</label>
+          <input id="lg-pass" type="password" value="••••••••" placeholder="Sua senha">
+          <label>Acessar painel</label>
+          <div class="choice">
+            <button type="button" id="lg-op" class="on">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg>
+              <div class="t">Operacional</div><div class="d">Atender conversas</div>
+            </button>
+            <button type="button" id="lg-ge">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 3v18h18"></path><path d="M7 14l3-3 3 3 5-6"></path></svg>
+              <div class="t">Gerencial</div><div class="d">Indicadores e configuração</div>
+            </button>
+          </div>
+          <div class="err" id="lg-err"></div>
+          <button class="enter" type="submit">Entrar</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
-[[redirects]]
-  from = "/pd"
-  to = "/SBS Painel PD.html"
-  status = 200
+  <!-- APP -->
+  <div class="app hidden" id="app">
+    <header class="topbar">
+      <div class="tb-brand">
+        <div class="tb-logo"><svg width="15" height="15" viewBox="0 0 24 24"><ellipse cx="12" cy="11" rx="6.2" ry="9.2" transform="rotate(-18 12 12)" fill="#fff"></ellipse></svg></div>
+        <div class="tb-title"><div class="t1">Central de Atendimento</div><div class="t2">Caixa unificada · 3 marcas</div></div>
+      </div>
+      <div class="tb-tabs">
+        <button data-view="operacional" class="on"><i data-lucide="message-square"></i> Atendimento</button>
+        <button data-view="gerencial"><i data-lucide="bar-chart-3"></i> Gerencial</button>
+      </div>
+      <div class="tb-spacer"></div>
+      <div class="tb-status"><span class="dot"></span><span class="t">Disponível</span></div>
+      <div class="tb-agent">
+        <div class="meta">
+          <select id="agent-picker" title="Atendente conectado"></select>
+          <div class="role" id="agent-role"></div>
+        </div>
+        <div class="av" id="agent-av">AP</div>
+        <button class="out" id="logout" title="Sair"><i data-lucide="log-out"></i></button>
+      </div>
+    </header>
+    <div class="content" id="content"></div>
+  </div>
 
-[[redirects]]
-  from = "/rh"
-  to = "/SBS Painel RH.html"
-  status = 200
+  <div class="toast" id="toast"></div>
 
-[[redirects]]
-  from = "/colaborador"
-  to = "/SBS Portal do Colaborador.html"
-  status = 200
-
-[[redirects]]
-  from = "/mercado"
-  to = "/SBS Painel Inteligencia Mercado.html"
-  status = 200
-
-# cabeçalhos de segurança básicos
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "SAMEORIGIN"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="auth-users.js"></script>
+  <script src="sbs-org.js"></script>
+  <script src="data.js"></script>
+  <script src="precos-data.js"></script>
+  <script src="pedidos-data.js"></script>
+  <script src="sbs-ambiente.js"></script>
+  <script src="sbs-store.js"></script>
+  <script src="sbs-release.js"></script>
+  <script src="sbs-telemetria.js"></script>
+  <script src="sbs-audit.js"></script>
+  <script src="sbs-plataformas.js"></script>
+  <script src="sbs-config.js"></script>
+  <script src="sbs-cloud.js"></script>
+  <script src="sbs-cloud-rows.js"></script>
+  <script src="sbs-visibilidade.js"></script>
+  <script src="sbs-auth.js"></script>
+  <script src="sbs-ui.js"></script>
+  <script src="sbs-proactive.js"></script>
+  <script src="sbs-avatar.js"></script>
+  <script src="sbs-assistant.js"></script>
+  <script src="atendimento-data.js"></script>
+  <script src="docs-core.js"></script>
+  <script src="docs-data-atendimento.js"></script>
+  <script src="atend-core.js"></script>
+  <script src="atend-inbox.js"></script>
+  <script src="atend-gerencial.js"></script>
+  <script src="atend-sla-nps.js"></script>
+  <script src="atend-boot.js"></script>
+  <script src="sbs-comunicacao.js"></script>
+  <script src="sbs-omni.js"></script>
+  <script src="sbs-tour.js"></script>
+</body>
+</html>

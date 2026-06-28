@@ -54,14 +54,21 @@ const PEOPLE = [
 
   // Acessos administrativos / extras
   { email:"comercial"+D,         nome:"Comercial",          papel:"admin",      gerente:null },
-  { email:"thiago.maschietto"+D, nome:"Thiago Maschietto",  papel:"ceo",        gerente:null },
+  { email:"thiago.maschietto"+D, nome:"Thiago Maschietto",  papel:"admin",      gerente:null },
   { email:"ceo"+D,               nome:"CEO",                papel:"ceo",        gerente:null },
   { email:"marketing"+D,         nome:"Marketing",          papel:"admin",      gerente:null },
   { email:"victor.hugo"+D,       nome:"Victor Hugo",        papel:"admin",      gerente:null },
   { email:"natalia.yamasaki"+D,  nome:"Natália Yamasaki",   papel:"admin",      gerente:null },
-  { email:"miriam.santos"+D,     nome:"Miriam Santos",      papel:"admin",      gerente:null },
-  { email:"leandro.silva"+D,     nome:"Leandro Silva",      papel:"admin",      gerente:null },
+  { email:"leandro.silva"+D,     nome:"Leandro Silva",      papel:"supervisor", gerente:null },
+  { email:"leandro.carvalho"+D,  nome:"Leandro Carvalho",   papel:"admin",      gerente:null },
   { email:"lara.moura"+D,        nome:"Lara Moura",         papel:"supervisor", gerente:"caio.simoes"+D },
+
+  // Acessos por setor (painéis) — definidos pela governança
+  { email:"franz.ferg"+D,        nome:"Franz",              papel:"colaborador", paineis:["marketing"],      gerente:null },
+  { email:"marcela.marketing"+D, nome:"Marcela",            papel:"colaborador", paineis:["marketing"],      gerente:null },
+  { email:"lara.inovacao"+D,     nome:"Lara",               papel:"colaborador", paineis:["marketing","pd"], gerente:null },
+  { email:"rony.rh"+D,           nome:"Rony",               papel:"colaborador", paineis:["rh"],             gerente:null },
+  { email:"ana.rh"+D,            nome:"Ana",                papel:"colaborador", paineis:["rh"],             gerente:null },
 ];
 
 const byEmail = {};

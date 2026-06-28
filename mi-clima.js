@@ -174,23 +174,73 @@ window.MI_CLIMA = (function(){
       }
     };
 
+    function loadLeaflet(cb){
+      if(window.L){ cb(); return; }
+      if(!document.getElementById("leaflet-css")){ var css=document.createElement("link"); css.id="leaflet-css"; css.rel="stylesheet"; css.href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"; document.head.appendChild(css); }
+      var js=document.createElement("script"); js.src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"; js.onload=cb; js.onerror=function(){ MI.toast("Não consegui carregar o mapa"); }; document.head.appendChild(js);
+    }
     function formPraca(ed){
       ed=ed||{};
       MI.modal(ed.id?"Editar praça":"Nova praça agrícola",
         '<div class="fld"><label>Cidade / praça</label><input id="pf-nome" value="'+esc(ed.nome||'')+'" placeholder="Ex.: Sorriso"></div>'+
         '<div class="fld-row"><div class="fld"><label>UF</label><input id="pf-uf" value="'+esc(ed.uf||'')+'" placeholder="MT"></div>'+
           '<div class="fld"><label>Cultura</label><input id="pf-cult" value="'+esc(ed.cultura||'')+'" placeholder="Soja / Milho"></div></div>'+
+        '<div class="fld"><label>Localização no mapa</label>'+
+          '<div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap">'+
+            '<button type="button" class="mc-btn ghost" id="pf-geo"><i data-lucide="locate-fixed"></i> Usar minha localização</button>'+
+          '</div>'+
+          '<div id="pf-map" style="height:240px;border-radius:12px;overflow:hidden;border:1px solid var(--line,#e0e5e2);background:#eef2f0"></div>'+
+          '<p style="font-size:11.5px;color:var(--muted);margin:6px 0 0">Toque no mapa para posicionar o pino — ou use sua localização. O pino também pode ser arrastado.</p>'+
+        '</div>'+
         '<div class="fld-row"><div class="fld"><label>Latitude</label><input id="pf-lat" type="number" step="0.0001" value="'+(ed.lat!=null?ed.lat:'')+'" placeholder="-12.5450"></div>'+
-          '<div class="fld"><label>Longitude</label><input id="pf-lon" type="number" step="0.0001" value="'+(ed.lon!=null?ed.lon:'')+'" placeholder="-55.7110"></div></div>'+
-        '<p style="font-size:11.5px;color:var(--muted);margin:2px 0 0">Dica: pegue lat/long no Google Maps (clique no ponto → coordenadas).</p>',
+          '<div class="fld"><label>Longitude</label><input id="pf-lon" type="number" step="0.0001" value="'+(ed.lon!=null?ed.lon:'')+'" placeholder="-55.7110"></div></div>',
         (ed.id?'<button class="mc-btn ghost danger" id="pf-del">Remover</button>':'')+'<button class="mc-btn ghost" id="pf-cancel">Cancelar</button><button class="mc-btn primary" id="pf-save"><i data-lucide="save"></i> Salvar</button>');
       document.getElementById("pf-cancel").addEventListener("click",MI.closeModal);
       var del=document.getElementById("pf-del"); if(del) del.addEventListener("click",function(){ S.remove("mi_clima",ed.id); MI.toast("Praça removida"); MI.closeModal(); CACHE=null; MI.refresh(); });
+
+      // ---- mapa interativo (Leaflet / OpenStreetMap) ----
+      var map=null, marker=null;
+      function setLatLon(la,lo){ var a=document.getElementById("pf-lat"), b=document.getElementById("pf-lon"); if(a) a.value=(+la).toFixed(5); if(b) b.value=(+lo).toFixed(5); }
+      function placeMarker(la,lo){
+        if(!map||!window.L) return;
+        if(marker){ marker.setLatLng([la,lo]); }
+        else { marker=L.marker([la,lo],{draggable:true}).addTo(map); marker.on("dragend",function(){ var p=marker.getLatLng(); setLatLon(p.lat,p.lng); reverseGeo(p.lat,p.lng); }); }
+      }
+      function reverseGeo(la,lo){
+        try{
+          fetch("https://nominatim.openstreetmap.org/reverse?format=json&zoom=10&accept-language=pt-BR&lat="+la+"&lon="+lo)
+            .then(function(r){ return r.json(); })
+            .then(function(j){ var a=(j&&j.address)||{}; var cid=a.city||a.town||a.village||a.municipality||a.county||""; var nm=document.getElementById("pf-nome"); if(nm&&!nm.value.trim()&&cid) nm.value=cid; })
+            .catch(function(){});
+        }catch(e){}
+      }
+      loadLeaflet(function(){
+        if(!document.getElementById("pf-map")) return;
+        var sLat=ed.lat!=null?ed.lat:-15.78, sLon=ed.lon!=null?ed.lon:-47.93, sZoom=ed.lat!=null?10:4;
+        map=L.map("pf-map").setView([sLat,sLon],sZoom);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map);
+        if(ed.lat!=null) placeMarker(ed.lat,ed.lon);
+        map.on("click",function(e){ placeMarker(e.latlng.lat,e.latlng.lng); setLatLon(e.latlng.lat,e.latlng.lng); reverseGeo(e.latlng.lat,e.latlng.lng); });
+        setTimeout(function(){ try{ map.invalidateSize(); }catch(e){} },220);
+      });
+      var geoBtn=document.getElementById("pf-geo");
+      if(geoBtn) geoBtn.addEventListener("click",function(){
+        if(!navigator.geolocation){ MI.toast("Localização não disponível neste aparelho"); return; }
+        MI.toast("Buscando sua localização…");
+        navigator.geolocation.getCurrentPosition(function(pos){
+          var la=pos.coords.latitude, lo=pos.coords.longitude;
+          setLatLon(la,lo);
+          if(map){ map.setView([la,lo],13); placeMarker(la,lo); }
+          reverseGeo(la,lo);
+          MI.toast("Localização marcada");
+        }, function(){ MI.toast("Não consegui pegar a localização (permita o acesso no navegador)."); }, {enableHighAccuracy:true,timeout:9000,maximumAge:0});
+      });
+
       document.getElementById("pf-save").addEventListener("click",function(){
         var v=function(id){ var e=document.getElementById(id); return e?e.value.trim():""; };
         var nome=v("pf-nome"), lat=parseFloat(v("pf-lat")), lon=parseFloat(v("pf-lon"));
         if(!nome){ MI.toast("Informe a cidade"); return; }
-        if(isNaN(lat)||isNaN(lon)){ MI.toast("Informe latitude e longitude"); return; }
+        if(isNaN(lat)||isNaN(lon)){ MI.toast("Marque o ponto no mapa ou use sua localização"); return; }
         var data={ nome:nome, uf:v("pf-uf"), cultura:v("pf-cult"), lat:lat, lon:lon };
         if(ed.id) S.update("mi_clima",ed.id,data); else S.add("mi_clima",Object.assign({id:"cl"+Date.now()},data));
         MI.toast("Praça salva"); MI.closeModal(); CACHE=null; MI.refresh();

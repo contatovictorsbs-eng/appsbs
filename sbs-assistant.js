@@ -15,6 +15,29 @@
   function n(c){ return (S()&&S().getCol(c)||[]).length; }
   function money(v){ v=Number(v||0); if(v>=1e6) return "R$ "+(v/1e6).toFixed(1)+" mi"; if(v>=1e3) return "R$ "+(v/1e3).toFixed(0)+" mil"; return "R$ "+v; }
 
+  /* fala com a IA: no preview usa window.claude; no site publicado usa a função de backend */
+  async function askAI(prompt){
+    if(window.claude && window.claude.complete){
+      try{ var r=await window.claude.complete(prompt); if(r) return r; }catch(e){}
+    }
+    var resp=await fetch("/.netlify/functions/assistente",{ method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({prompt:prompt}) });
+    if(!resp.ok) throw new Error("http "+resp.status);
+    var j=await resp.json();
+    return j.text||j.completion||j.error||"";
+  }
+
+  /* funcionalidades do painel (da Central de Ajuda) — para responder ‘como faço X’ */
+  function docsResumo(){
+    try{
+      var d=window.SBS_DOCS&&SBS_DOCS.plataformas&&SBS_DOCS.plataformas[PLAT];
+      if(!d) return "";
+      var grupos=d.grupos||(d.itens?[{itens:d.itens}]:[]);
+      var linhas=[];
+      grupos.forEach(function(g){ (g.itens||[]).forEach(function(it){ if(it.titulo) linhas.push("- "+it.titulo+(it.resumo?(": "+it.resumo):"")); }); });
+      return linhas.length? ("\nFUNCIONALIDADES DESTE PAINEL (para orientar o uso):\n"+linhas.slice(0,40).join("\n")) : "";
+    }catch(e){ return ""; }
+  }
+
   /* resumo por setor (cada painel vê só o seu; T.I. e CEO veem tudo) */
   function secComercial(g){
     var ped=g("pedidos"), fat=0,cart=0; ped.forEach(function(p){ if((p.status||"")==="faturado") fat+=+p.valor||0; else cart+=+p.valor||0; });
@@ -147,13 +170,15 @@
       var allAccess = (PLAT==="ti"||PLAT==="ceo");
       var prompt="Você é o Assistente SBS, um analista de negócios do agronegócio (sementes) integrado ao "+platNome+" da empresa SBS Green Seeds. "+
         "Responda em português do Brasil, de forma curta, direta e prática (linguagem de campo, sem jargão técnico). "+
-        "Use os DADOS ATUAIS abaixo para gerar insights acionáveis. Quando útil, traga 2-4 bullets. Não invente números que não estão nos dados.\n"+
+        "Você ajuda em DUAS frentes: (1) gerar insights a partir dos DADOS ATUAIS; (2) ensinar a USAR o sistema, com base na lista de funcionalidades. "+
+        "Quando útil, traga 2-4 bullets. Não invente números que não estão nos dados.\n"+
         (allAccess
           ? "Você tem visão GLOBAL de todos os setores (T.I./Diretoria). Pode cruzar informações entre eles.\n"
-          : "IMPORTANTE: você responde APENAS sobre o setor deste painel ("+platNome+"). Se perguntarem sobre outro setor (vendas, atendimento, marketing, P&D, RH, sistema), responda educadamente que essa informação está em outro painel e que apenas T.I. e Diretoria têm visão de todos os setores.\n")+
-        "\nDADOS ATUAIS:\n"+contexto()+"\n\nPergunta do gestor: "+q;
+          : "IMPORTANTE: sobre DADOS você responde apenas sobre o setor deste painel ("+platNome+"). Se perguntarem dados de outro setor, diga que estão em outro painel (só T.I./Diretoria têm visão geral). Dúvidas de COMO USAR este painel pode responder sempre.\n")+
+        docsResumo()+
+        "\n\nDADOS ATUAIS:\n"+contexto()+"\n\nPergunta do usuário: "+q;
       try{
-        var resp=await window.claude.complete(prompt);
+        var resp=await askAI(prompt);
         typing.remove(); add("bot", resp||"Não consegui gerar agora. Tente novamente.");
       }catch(e){
         typing.remove(); add("bot","Não foi possível falar com a IA agora. Verifique a conexão e tente de novo.");
@@ -171,6 +196,36 @@
     panel.querySelector("#sbs-as-x").addEventListener("click",function(){ panel.classList.remove("open"); });
     sendBtn.addEventListener("click",function(){ ask(input.value.trim()); });
     input.addEventListener("keydown",function(e){ if(e.key==="Enter") ask(input.value.trim()); });
+
+    // permite abrir o assistente de qualquer lugar (ex.: item de menu)
+    window.SBS_ASSIST = {
+      open:function(){ if(!panel.classList.contains("open")){ fab.click(); } else { input.focus(); } },
+      ask:function(q){ if(!panel.classList.contains("open")) fab.click(); ask(q); }
+    };
+
+    injectNavItem();
+  }
+
+  /* item de menu "Assistente IA" na sidebar de cada painel (estilo clonado dos itens existentes) */
+  function injectNavItem(){
+    function add(){
+      var nav=document.getElementById("nav"); if(!nav) return;
+      if(nav.querySelector("[data-assist-item]")) return;
+      var sample=nav.querySelector("[data-nav], .nav-item, a"); if(!sample) return;
+      var el=document.createElement(sample.tagName.toLowerCase());
+      el.className=sample.className.replace(/\bactive\b|\bon\b/g,"").trim();
+      el.setAttribute("data-assist-item","1");
+      el.style.cursor="pointer";
+      el.innerHTML='<i data-lucide="sparkles"></i><span>Assistente IA</span>';
+      el.addEventListener("click",function(e){ e.preventDefault(); e.stopImmediatePropagation(); window.SBS_ASSIST&&SBS_ASSIST.open(); }, true);
+      nav.appendChild(el);
+      window.lucide&&lucide.createIcons();
+    }
+    add();
+    try{
+      var nav=document.getElementById("nav");
+      if(nav){ var mo=new MutationObserver(function(){ if(!nav.querySelector("[data-assist-item]")) add(); }); mo.observe(nav,{childList:true}); }
+    }catch(e){}
   }
 
   if(document.readyState!=="loading") setTimeout(build,300);

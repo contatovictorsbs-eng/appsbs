@@ -21,6 +21,7 @@ const PD = (function(){
   function canAccess(email){
     const org = window.SBS_ORG && window.SBS_ORG.get(email);
     if(org && (org.papel==="admin"||org.papel==="ti"||org.papel==="ceo"||org.papel==="nacional")) return true;
+    if(org && org.paineis && org.paineis.indexOf("pd")>=0) return true;
     if(/p&d|pd|pesquisa|inova|tecnic/i.test((org&&org.papel)||"")) return true;
     const u = (S.getCol("usuarios")||[]).find(x=>(x.email||"").toLowerCase()===email);
     return !!(u && (u.perfil==="Administrador" || /pesquisa|p&d|inova/i.test(u.perfil||"")));

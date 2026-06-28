@@ -20,6 +20,7 @@ const RH = (function(){
   function canAccess(email){
     const org = window.SBS_ORG && window.SBS_ORG.get(email);
     if(org && (org.papel==="admin"||org.papel==="ti"||org.papel==="ceo"||org.papel==="nacional")) return true;
+    if(org && org.paineis && org.paineis.indexOf("rh")>=0) return true;
     if(/rh|recursos|gente|pessoas/i.test((org&&org.papel)||"")) return true;
     const u = (S.getCol("usuarios")||[]).find(x=>(x.email||"").toLowerCase()===email);
     return !!(u && (u.perfil==="Administrador" || /rh|recursos humanos|gente/i.test(u.perfil||"")));
@@ -33,6 +34,7 @@ const RH = (function(){
     { id:"canais",       label:"Canais & LinkedIn", icon:"share-2" },
     { sec:"Pessoas" },
     { id:"colaboradores",label:"Colaboradores",    icon:"users" },
+    { id:"comunicacao",  label:"Comunicação & Documentos", icon:"send" },
     { id:"endomarketing",label:"Endomarketing",    icon:"party-popper" },
     { sec:"Apoio" },
     { id:"ajuda",        label:"Central de Ajuda", icon:"circle-help" },
@@ -96,7 +98,7 @@ const RH = (function(){
       if(!email) return showErr("Informe seu usuário.");
       if(window.SBS_ORG){ const r=window.SBS_ORG.resolveLogin(email); if(r.ok) email=r.email; else if(r.ambiguous) return showErr("Há mais de um \""+email+"\". Use nome.sobrenome."); else if(!email.includes("@")) email=email.replace(/\s+/g,".")+"@sbsgreen.com.br"; }
       else if(!email.includes("@")) email=email.replace(/\s+/g,".")+"@sbsgreen.com.br";
-      if(pass!==window.SBS_PASSWORD) return showErr("Senha incorreta.");
+      var _a=window.SBS_AUTH?SBS_AUTH.check(email,pass):{ok:pass===window.SBS_PASSWORD}; if(!_a.ok) return showErr("Senha incorreta."); if(_a.mustChange&&_a.isDefault&&window.SBS_AUTH) setTimeout(function(){SBS_AUTH.promptChange((email||"").toLowerCase());},700);
       if(!canAccess(email)) return showErr("Acesso restrito à equipe de RH.");
       startSession(email);
     });

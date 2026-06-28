@@ -19,6 +19,7 @@ const MKT = (function(){
   function canAccess(email){
     const org = window.SBS_ORG && window.SBS_ORG.get(email);
     if(org && (org.papel==="admin"||org.papel==="ti"||org.papel==="ceo"||org.papel==="nacional")) return true;
+    if(org && org.paineis && org.paineis.indexOf("marketing")>=0) return true;
     if(/marketing|mkt|comunica/i.test((org&&org.papel)||"")) return true;
     const u = (S.getCol("usuarios")||[]).find(x=>(x.email||"").toLowerCase()===email);
     return !!(u && (u.perfil==="Administrador" || /marketing/i.test(u.perfil||"")));

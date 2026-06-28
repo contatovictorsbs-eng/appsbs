@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SBS Green Seeds · Painel Gerencial</title>
-<meta name="sbs-platform" content="gerencial">
+<title>SBS Green Seeds · Painel Gerente Nacional de Vendas</title>
+<meta name="sbs-platform" content="nacional">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -24,8 +24,8 @@
   <div class="login" id="login">
     <div class="login-card">
       <div class="login-logo"><img src="logo-sbs-white.png" alt="SBS Green Seeds"></div>
-      <h2>Painel Gerencial</h2>
-      <p class="sub">Administração do Portal do Vendedor</p>
+      <h2>Gerente Nacional de Vendas</h2>
+      <p class="sub">Gestão nacional de vendas · regionais e supervisores</p>
       <form id="login-form" novalidate>
         <div class="fld"><label>Usuário</label>
           <input id="lg-email" type="text" autocapitalize="none" spellcheck="false" placeholder="primeiro nome"></div>
@@ -44,7 +44,7 @@
     <aside class="sidebar">
       <div class="sb-logo">
         <span class="lc"><img src="logo-sbs-white.png" alt="SBS"></span>
-        <span class="lt">Painel Gerencial<small>SBS Green Seeds</small></span>
+        <span class="lt">Gerente Nacional<small>SBS Green Seeds</small></span>
       </div>
       <nav class="sb-nav" id="nav"></nav>
       <div class="sb-foot">
@@ -109,9 +109,11 @@
   <script src="sbs-proactive.js"></script>
   <script src="sbs-avatar.js"></script>
   <script src="sbs-assistant.js"></script>
+  <script>window.SBS_PANEL_VARIANT="nacional";</script>
   <script src="panel-core.js"></script>
   <script src="panel-modules.js"></script>
   <script src="panel-modules2.js"></script>
+  <script src="gn-equipe.js"></script>
   <script src="panel-metas.js"></script>
   <script src="panel-carteira.js"></script>
   <script src="sbs-mapa.js"></script>
@@ -122,6 +124,8 @@
   <script src="ajuda-painel.js"></script>
   <script src="panel-boot.js"></script>
   <script src="sbs-comunicacao.js"></script>
+  <script src="sbs-help.js"></script>
   <script src="sbs-omni.js"></script>
+  <script src="sbs-tour.js"></script>
 </body>
 </html>
