@@ -6,6 +6,9 @@
 <title>SBS Green Seeds · Portal do Colaborador</title>
 <meta name="theme-color" content="#0B6B61">
 <meta name="sbs-platform" content="colaborador">
+<link rel="manifest" href="manifest-colaborador.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SBS Colaborador">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -52,6 +55,32 @@
   .co-notif-t{font-size:14px;font-weight:700;color:var(--ink)}
   .co-notif-x{font-size:12.5px;color:var(--ink2);margin-top:3px;line-height:1.45}
   .co-notif-d{font-size:11px;color:var(--muted);margin-top:5px}
+  .co-env-h{display:flex;align-items:center;gap:11px}
+  .co-env-ic{width:40px;height:40px;border-radius:11px;background:#E9F3EF;color:#0B6B61;display:grid;place-items:center;flex:0 0 auto}
+  .co-env-ic i{width:19px;height:19px}
+  .co-env-t{font-size:14px;font-weight:800}
+  .co-env-s{font-size:11.5px;color:var(--muted)}
+  .co-env-new{margin-left:auto;background:#E1306C;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px}
+  .co-env-ok{margin-left:auto;color:#0B8A5E}.co-env-ok i{width:20px;height:20px}
+  .co-env-m{font-size:13px;color:var(--ink2);margin:10px 0;line-height:1.45}
+  .co-env-done{font-size:12.5px;font-weight:700;color:#0B8A5E;background:#E4F5EC;border-radius:9px;padding:8px 11px;text-align:center}
+  .co-doc-link{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#1E73C2;text-decoration:none;margin:8px 0 4px}
+  .co-doc-link i{width:15px;height:15px}
+  .co-prov{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:#0B6B61;background:#E3F4F1;border-radius:9px;padding:7px 10px;margin:8px 0}
+  .co-prov i{width:14px;height:14px}
+  /* redesign: mais arredondado e respirado */
+  .co-card{border-radius:20px;padding:17px;box-shadow:0 2px 10px rgba(16,32,26,.04)}
+  .co-q-ic{border-radius:18px}
+  .co-hero{border-radius:0 0 26px 26px}
+  .co-env-ic,.co-notif-ic{border-radius:14px}
+  .co-btn{border-radius:14px}
+  .co-ev-date{border-radius:15px}
+  .co-hero{position:relative;background-size:cover;background-position:center}
+  .co-hero.has-banner{min-height:150px;display:flex;align-items:flex-end}
+  .co-hero-row{display:flex;align-items:center;gap:13px}
+  .co-hero-av{border:2.5px solid rgba(255,255,255,.85);box-shadow:0 4px 14px rgba(0,0,0,.18)}
+  .co-hero-edit{position:absolute;top:14px;right:16px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(0,0,0,.32);color:#fff;display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(4px)}
+  .co-hero-edit i{width:16px;height:16px}
   /* screen */
   .screen{flex:1;overflow-y:auto;padding:0 16px 90px}
   .co-hero{background:linear-gradient(150deg,#0B6B61,#10B0A0);margin:0 -16px 16px;padding:26px 20px 22px;color:#fff}
@@ -201,6 +230,7 @@
     <nav class="co-nav">
       <button class="co-tab on" data-tab="inicio"><i data-lucide="home"></i>Início</button>
       <button class="co-tab" data-tab="feed"><i data-lucide="newspaper"></i>Feed</button>
+      <button class="co-tab" data-tab="parami"><i data-lucide="inbox"></i>Para mim</button>
       <button class="co-tab" data-tab="mural"><i data-lucide="megaphone"></i>Mural</button>
       <button class="co-tab" data-tab="agenda"><i data-lucide="calendar-days"></i>Agenda</button>
       <button class="co-tab" data-tab="vagas"><i data-lucide="briefcase"></i>Vagas</button>
@@ -217,10 +247,18 @@
   <script src="data.js"></script>
   <script src="precos-data.js"></script>
   <script src="pedidos-data.js"></script>
+  <script src="sbs-ambiente.js"></script>
   <script src="sbs-store.js"></script>
+  <script src="sbs-telemetria.js"></script>
+  <script src="sbs-audit.js"></script>
   <script src="sbs-plataformas.js"></script>
   <script src="sbs-config.js"></script>
   <script src="sbs-cloud.js"></script>
+  <script src="sbs-cloud-rows.js"></script>
+  <script src="sbs-visibilidade.js"></script>
+  <script src="sbs-auth.js"></script>
+  <script src="sbs-ui.js"></script>
+  <script src="sbs-install.js"></script>
   <script src="sbs-avatar.js"></script>
   <script src="rh-data.js"></script>
   <script src="colaborador-app.js"></script>

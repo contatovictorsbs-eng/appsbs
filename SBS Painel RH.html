@@ -110,6 +110,10 @@
   .rh-cadfoto{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:16px}
   .rh-cadav{width:86px;height:86px;border-radius:50%;background:#E9F3EF;color:#0B6B61;display:grid;place-items:center;background-size:cover;background-position:center;overflow:hidden}
   .rh-cadav i{width:30px;height:30px}
+  .rh-envrow{display:grid;grid-template-columns:1.3fr .8fr 1.4fr .8fr .9fr .3fr;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px;cursor:pointer}
+  .rh-envrow:last-child{border-bottom:0}
+  .rh-envrow.head{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);cursor:default}
+  .rh-envrow .r{text-align:right}.rh-envrow .strong{font-weight:700}
   .rh-cnrow{display:grid;grid-template-columns:1.6fr 1.4fr .7fr .9fr .7fr;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px;cursor:pointer}
   .rh-cnrow:last-child{border-bottom:0}
   .rh-cnrow.head{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);cursor:default}
@@ -226,10 +230,18 @@
   <script src="data.js"></script>
   <script src="precos-data.js"></script>
   <script src="pedidos-data.js"></script>
+  <script src="sbs-ambiente.js"></script>
   <script src="sbs-store.js"></script>
+  <script src="sbs-telemetria.js"></script>
+  <script src="sbs-audit.js"></script>
   <script src="sbs-plataformas.js"></script>
   <script src="sbs-config.js"></script>
   <script src="sbs-cloud.js"></script>
+  <script src="sbs-cloud-rows.js"></script>
+  <script src="sbs-visibilidade.js"></script>
+  <script src="sbs-auth.js"></script>
+  <script src="sbs-ui.js"></script>
+  <script src="sbs-proactive.js"></script>
   <script src="sbs-avatar.js"></script>
   <script src="sbs-assistant.js"></script>
   <script src="rh-data.js"></script>
@@ -238,6 +250,10 @@
   <script src="rh-core.js"></script>
   <script src="rh-modules.js"></script>
   <script src="rh-extras.js"></script>
+  <script src="rh-comunicacao.js"></script>
+  <script src="sbs-charts.js"></script>
   <script src="rh-boot.js"></script>
+  <script src="sbs-comunicacao.js"></script>
+  <script src="sbs-omni.js"></script>
 </body>
 </html>

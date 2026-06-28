@@ -24,6 +24,8 @@ const TI = (function(){
     { id:"overview", label:"Visão Geral",        icon:"layout-dashboard" },
     { id:"features", label:"Liberação de Features", icon:"toggle-right" },
     { id:"gmud",     label:"GMud · Mudanças",    icon:"git-pull-request-arrow", count:()=>gmudAbertas() },
+    { id:"demandas", label:"Demandas",            icon:"inbox", count:()=>demandasAbertas() },
+    { id:"automacoes", label:"Centro de Automações", icon:"zap" },
     { id:"plataformas", label:"Plataformas",      icon:"layout-grid" },
     { id:"integracoes", label:"Integrações",      icon:"git-compare" },
     { id:"painres",  label:"Painéis & Apps",     icon:"grid-3x3" },
@@ -32,10 +34,17 @@ const TI = (function(){
     { id:"projetos",  label:"Centro de Projetos", icon:"folder-kanban" },
     { id:"pesquisa",  label:"Pesquisa de Tecnologia", icon:"clipboard-list" },
     { id:"changelog",label:"Versões / Changelog",icon:"history" },
+    { id:"auditoria",label:"Auditoria · Log",   icon:"scroll-text" },
+    { id:"erros",    label:"Erros & Diagnóstico", icon:"bug", count:()=>errosAbertos() },
+    { id:"migracao", label:"Migração · Ambiente", icon:"git-pull-request-arrow" },
+    { id:"saude",    label:"Saúde & Segurança", icon:"heart-pulse" },
+    { id:"arquitetura",label:"Arquitetura do SaaS", icon:"network" },
     { sec:"Ajuda" },
     { id:"ajuda",    label:"Central de Ajuda",   icon:"circle-help" },
   ];
   function gmudAbertas(){ return (S.getCol("gmuds")||[]).filter(g=>g.status!=="concluida"&&g.status!=="cancelada").length; }
+  function demandasAbertas(){ return (S.getCol("demandas")||[]).filter(d=>d.status==="aberta"||d.status==="triagem").length; }
+  function errosAbertos(){ return (S.getCol("erros")||[]).filter(e=>!e.resolvido).length; }
 
   const Modules = {};
   let current = "overview";

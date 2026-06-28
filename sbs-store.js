@@ -11,7 +11,7 @@
      mesma — o resto do código não muda.
    =========================================================== */
 (function(){
-  const NS = "sbsdb:";
+  const NS = (window.SBS_ENV && window.SBS_ENV.ns) || "sbsdb:";
   const VERSION = "1";
 
   function read(key, fallback){
