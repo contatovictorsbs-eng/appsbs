@@ -22,6 +22,7 @@ const TI = (function(){
   const NAV = [
     { sec:"Tecnologia" },
     { id:"overview", label:"Visão Geral",        icon:"layout-dashboard" },
+    { id:"lancamentos", label:"Lançamentos",     icon:"rocket" },
     { id:"features", label:"Liberação de Features", icon:"toggle-right" },
     { id:"gmud",     label:"GMud · Mudanças",    icon:"git-pull-request-arrow", count:()=>gmudAbertas() },
     { id:"demandas", label:"Demandas",            icon:"inbox", count:()=>demandasAbertas() },

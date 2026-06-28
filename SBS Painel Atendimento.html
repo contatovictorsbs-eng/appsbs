@@ -1,290 +1,73 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0B6B61">
-<title>SBS Green Seeds · Sistemas</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0B6B61">
-<template id="__bundler_thumbnail" data-bg-color="#0B6B61">
-  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
-    <rect width="1200" height="800" fill="#0B6B61"/>
-    <rect x="430" y="250" width="150" height="300" rx="34" fill="#6FA331"/>
-    <rect x="620" y="250" width="150" height="140" rx="20" fill="#fff"/>
-    <rect x="620" y="410" width="150" height="140" rx="20" fill="#3CC7B8"/>
-  </svg>
-</template>
-<style>
-  *{ box-sizing:border-box; margin:0; padding:0; }
-  body{ font-family:"Plus Jakarta Sans",system-ui,sans-serif; background:#0B3D38; color:#0e1f1b;
-    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px;
-    background-image:radial-gradient(circle at 20% 10%, #155049 0, #0B3D38 55%); }
-  .wrap{ width:100%; max-width:980px; }
-  .head{ text-align:center; margin-bottom:38px; color:#fff; }
-  .logo{ height:46px; margin-bottom:22px; }
-  .head h1{ font-size:28px; font-weight:800; letter-spacing:-.01em; }
-  .head p{ font-size:15px; color:#9fd3c9; margin-top:8px; font-weight:500; }
-  .grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
-  .card{ background:#fff; border-radius:20px; padding:26px 24px; text-decoration:none; color:inherit;
-    display:flex; flex-direction:column; gap:14px; transition:transform .16s, box-shadow .16s;
-    box-shadow:0 10px 30px rgba(0,0,0,.18); border:1px solid rgba(0,0,0,.04); }
-  .card:hover{ transform:translateY(-4px); box-shadow:0 18px 44px rgba(0,0,0,.26); }
-  .ic{ width:52px; height:52px; border-radius:14px; display:grid; place-items:center; color:#fff; }
-  .ic svg{ width:26px; height:26px; }
-  .card h2{ font-size:18px; font-weight:800; }
-  .card p{ font-size:13.5px; color:#5b6b65; line-height:1.5; flex:1; }
-  .go{ font-size:13px; font-weight:800; color:#0B6B61; display:inline-flex; align-items:center; gap:6px; }
-  .v{ background:#6FA331; }
-  .p{ background:#0B6B61; }
-  .t{ background:#2A4A7F; }
-  .c{ background:#13241F; }
-  .a{ background:#15171A; }
-  .m{ background:#6FA331; }
-  .d{ background:#0E7E72; }
-  .h{ background:#174D2F; }
-  .o{ background:#0E9B8E; }
-  .foot{ text-align:center; margin-top:30px; color:#7fb8ad; font-size:12.5px; }
-  /* ambiente (prod x homolog) */
-  .envbar{ margin-top:26px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); border-radius:16px;
-    padding:14px 18px; display:flex; align-items:center; gap:16px; justify-content:space-between; flex-wrap:wrap; color:#dff0ec; }
-  .env-l{ display:flex; align-items:center; gap:12px; min-width:0; }
-  .env-badge{ font-weight:800; font-size:11px; letter-spacing:.6px; padding:5px 10px; border-radius:8px; background:#6FA331; color:#fff; flex:none; }
-  .env-badge.homolog{ background:#b9791e; }
-  .env-txt{ font-size:12.5px; color:#bcd9d2; line-height:1.4; }
-  .env-actions{ display:flex; gap:8px; flex-wrap:wrap; }
-  .env-btn{ border:1px solid rgba(255,255,255,.22); background:rgba(255,255,255,.08); color:#fff; font-family:inherit;
-    font-weight:700; font-size:12.5px; padding:9px 14px; border-radius:10px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; }
-  .env-btn:hover{ background:rgba(255,255,255,.16); }
-  .env-btn.enter{ background:#b9791e; border-color:#b9791e; }
-  .env-btn.guide{ background:transparent; }
-  /* baixar o app */
-  .dl{ background:#fff; border-radius:22px; padding:22px 22px 24px; margin-bottom:26px; box-shadow:0 14px 40px rgba(0,0,0,.22); }
-  .dl-head{ display:flex; align-items:center; gap:12px; margin-bottom:18px; }
-  .dl-head .dl-ic{ width:48px; height:48px; }
-  .dl-head h2{ font-size:18px; font-weight:800; color:#16201a; }
-  .dl-head p{ font-size:13px; color:#5b6b65; margin-top:2px; }
-  .dl-ic{ width:52px; height:52px; border-radius:14px; display:grid; place-items:center; flex:none; }
-  .dl-ic svg{ width:26px; height:26px; color:#fff; }
-  .dl-opts{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-  .dl-card{ border:1.5px solid #e6ebe9; border-radius:16px; padding:18px; display:flex; flex-direction:column; gap:12px; background:#fbfdfc; }
-  .dl-card .dl-top{ display:flex; align-items:center; gap:12px; }
-  .dl-card h3{ font-size:16px; font-weight:800; color:#16201a; }
-  .dl-card .who{ font-size:12px; font-weight:700; color:#6FA331; }
-  .dl-card p{ font-size:12.5px; color:#5b6b65; line-height:1.5; flex:1; }
-  .dl-btn{ border:0; color:#fff; font-weight:800; font-size:14px; padding:12px 18px; border-radius:12px;
-    cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:8px; justify-content:center; width:100%; }
-  .dl-btn.v{ background:#6FA331; }
-  .dl-btn.o{ background:#0E9B8E; }
-  .dl-btn:hover{ filter:brightness(1.05); }
-  .dl-help{ background:none; border:0; color:#0B6B61; font-weight:700; font-size:12px; cursor:pointer; font-family:inherit; text-decoration:underline; align-self:center; }
-  @media(max-width:780px){ .grid{ grid-template-columns:1fr; } .dl-opts{ grid-template-columns:1fr; } }
-</style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="head">
-      <img class="logo" src="logo-sbs-white.png" alt="SBS Green Seeds">
-      <h1>Sistemas SBS Green Seeds</h1>
-      <p>Selecione o ambiente que deseja acessar</p>
-    </div>
+# ===========================================================
+# SBS Green Seeds — configuração de publicação (Netlify)
+# Site estático. URLs amigáveis para os três sistemas.
+# ===========================================================
 
-    <div class="dl">
-      <div class="dl-head">
-        <span class="dl-ic" style="background:#0B6B61"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg></span>
-        <div>
-          <h2>Baixe o app no seu celular</h2>
-          <p>Escolha o seu app e instale direto na tela inicial — abre como aplicativo, sem precisar de loja.</p>
-        </div>
-      </div>
-      <div class="dl-opts">
-        <div class="dl-card">
-          <div class="dl-top">
-            <span class="dl-ic v" style="background:#6FA331"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></span>
-            <div><div class="who">Para vendedores</div><h3>App do Vendedor</h3></div>
-          </div>
-          <p>Pedidos, preços, visitas, reclamações, frete e treinamentos — a ferramenta da força de vendas.</p>
-          <button class="dl-btn v" data-dl="SBS Portal do Vendedor.html"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Baixar app do Vendedor</button>
-          <button class="dl-help" data-help>Como instalar?</button>
-        </div>
-        <div class="dl-card">
-          <div class="dl-top">
-            <span class="dl-ic o" style="background:#0E9B8E"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></span>
-            <div><div class="who" style="color:#0E9B8E">Para colaboradores</div><h3>App do Colaborador</h3></div>
-          </div>
-          <p>Mural de comunicados, agenda, vagas internas, aniversariantes e seus dados — para todos os funcionários.</p>
-          <button class="dl-btn o" data-dl="SBS Portal do Colaborador.html"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Baixar app do Colaborador</button>
-          <button class="dl-help" data-help>Como instalar?</button>
-        </div>
-      </div>
-    </div>
+[build]
+  publish = "."
 
-    <div class="grid">
-      <a class="card" href="SBS Portal do Vendedor.html">
-        <span class="ic v"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></span>
-        <h2>Portal do Vendedor</h2>
-        <p>App da força de vendas: pedidos, preços, visitas, reclamações, frete e treinamentos.</p>
-        <span class="go">Acessar →</span>
-      </a>
-      <a class="card" href="SBS Painel Gerencial.html">
-        <span class="ic p"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="13" y="6" width="3" height="12"/></svg></span>
-        <h2>Painel Gerencial</h2>
-        <p>Gestão comercial: indicadores, aprovações, conteúdo do app e dados recebidos da equipe.</p>
-        <span class="go">Acessar →</span>
-      </a>
-      <a class="card" href="SBS Painel Gerente Nacional.html">
-        <span class="ic p"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 21a8 8 0 0 0-16 0"/><circle cx="10" cy="8" r="5"/><path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"/></svg></span>
-        <h2>Gerente Nacional de Vendas</h2>
-        <p>Gestão nacional: time de gerentes e supervisores, metas por região, carteira, mapa e insights.</p>
-        <span class="go">Acessar →</span>
-      </a>
-      <a class="card" href="SBS Painel T.I.html">
-        <span class="ic t"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v1a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3"/><path d="M5 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3"/><circle cx="12" cy="18" r="3"/></svg></span>
-        <h2>Painel de T.I.</h2>
-        <p>Tecnologia: liberação de features, GMud (gestão de mudanças) e versões do sistema.</p>
-        <span class="go">Acessar →</span>
-      </a>
-      <a class="card" href="SBS Painel CEO.html">
-        <span class="ic c"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></span>
-        <h2>Painel do CEO</h2>
-        <p>Visão executiva consolidada, somente leitura: comercial, equipe em campo, atendimento e sistema.</p>
-        <span class="go">Acessar →</span>
-      </a>
-      <a class="card" href="SBS Painel Atendimento.html">
-        <span class="ic a"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-        <h2>Central de Atendimento</h2>
-        <p>Caixa unificada multimarca (Nobre, SBS, SememBrás): WhatsApp, e-mail, chat e itens do app.</p>
-        <span class="go">Acessar →</span>
-      </a>
-      <a class="card" href="SBS Painel Marketing.html">
-        <span class="ic m"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span>
-        <h2>Painel de Marketing</h2>
-        <p>Campanhas, banco de materiais do app, calendário de conteúdo, redes e eventos/feiras.</p>
-        <span class="go">Acessar →</span>
-      </a>
-      <a class="card" href="SBS Painel PD.html">
-        <span class="ic d"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.5L4.8 18a2 2 0 0 0 1.7 3h11a2 2 0 0 0 1.7-3L14 9.5V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg></span>
-        <h2>Painel de P&amp;D / Inovação</h2>
-        <p>Pipeline de projetos, ensaios de campo, cultivares, banco de ideias e documentos técnicos.</p>
-        <span class="go">Acessar →</span>
-      </a>
-      <a class="card" href="SBS Painel RH.html">
-        <span class="ic h"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-        <h2>Painel de RH</h2>
-        <p>Recrutamento &amp; seleção (vagas e candidatos), colaboradores e endomarketing.</p>
-        <span class="go">Acessar →</span>
-      </a>
-      <a class="card" href="SBS Portal do Colaborador.html">
-        <span class="ic o"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></span>
-        <h2>Portal do Colaborador</h2>
-        <p>App de todos os funcionários: mural de comunicados, agenda, vagas internas e aniversários.</p>
-        <span class="go">Acessar →</span>
-      </a>
-      <a class="card" href="SBS Painel Inteligencia Mercado.html">
-        <span class="ic m"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12 18 7"/></svg></span>
-        <h2>Inteligência de Mercado</h2>
-        <p>Cotações e commodities, concorrentes monitorados, regiões e tendências do agronegócio.</p>
-        <span class="go">Acessar →</span>
-      </a>
-    </div>
-    <div class="foot">SBS Green Seeds · acesso restrito · governança SBS · <span id="ver-tag">v—</span></div>
-  </div>
+# raiz sempre abre o hub (index)
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+  force = true
 
-  <div id="pwa-banner" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:9000;background:#fff;border-top:1px solid #e6ebe9;box-shadow:0 -8px 30px rgba(0,0,0,.12);padding:14px 18px;display:flex;align-items:center;gap:14px;justify-content:center;flex-wrap:wrap">
-    <div style="display:flex;align-items:center;gap:12px">
-      <img src="assets/icon-192.png" alt="" style="width:42px;height:42px;border-radius:11px">
-      <div style="text-align:left">
-        <div style="font-weight:800;font-size:14px;color:#16201a">Instalar o app SBS Green</div>
-        <div style="font-size:12.5px;color:#6b7a74">Acesse direto da tela inicial do celular, sem navegador.</div>
-      </div>
-    </div>
-    <div style="display:flex;gap:8px">
-      <button id="pwa-install" style="border:0;background:#0B6B61;color:#fff;font-weight:800;font-size:14px;padding:11px 20px;border-radius:11px;cursor:pointer;font-family:inherit">Instalar</button>
-      <button id="pwa-close" style="border:1.5px solid #e0e5e2;background:#fff;color:#6b7a74;font-weight:700;font-size:14px;padding:11px 16px;border-radius:11px;cursor:pointer;font-family:inherit">Agora não</button>
-    </div>
-  </div>
-  <div id="pwa-ios" style="display:none;position:fixed;left:14px;right:14px;bottom:14px;z-index:9000;background:#fff;border:1px solid #e6ebe9;border-radius:14px;box-shadow:0 -8px 30px rgba(0,0,0,.14);padding:14px 16px;font-size:13px;color:#16201a">
-    <b>Instalar no iPhone:</b> toque em <b>Compartilhar</b> e depois em <b>“Adicionar à Tela de Início”</b>.
-    <span id="pwa-ios-x" style="float:right;cursor:pointer;color:#6b7a74;font-weight:800">✕</span>
-  </div>
+# URLs amigáveis (atalhos) → arquivos reais
+[[redirects]]
+  from = "/vendedor"
+  to = "/SBS Portal do Vendedor.html"
+  status = 200
 
-  <div id="dl-modal" style="display:none;position:fixed;inset:0;z-index:9500;background:rgba(8,28,24,.55);align-items:center;justify-content:center;padding:20px">
-    <div style="background:#fff;border-radius:20px;max-width:440px;width:100%;padding:26px 24px;box-shadow:0 30px 80px rgba(0,0,0,.4);font-family:inherit">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <h3 style="font-size:18px;font-weight:800;color:#16201a">Como instalar o app</h3>
-        <span id="dl-modal-x" style="cursor:pointer;color:#6b7a74;font-weight:800;font-size:18px">✕</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:16px">
-        <div>
-          <div style="font-weight:800;font-size:13.5px;color:#0B6B61;margin-bottom:6px">No Android (Chrome)</div>
-          <div style="font-size:13px;color:#4a5a54;line-height:1.55">Toque em <b>Instalar o app</b> acima. Se não aparecer, abra o menu <b>⋮</b> do navegador e escolha <b>“Instalar app”</b> ou <b>“Adicionar à tela inicial”</b>.</div>
-        </div>
-        <div>
-          <div style="font-weight:800;font-size:13.5px;color:#0B6B61;margin-bottom:6px">No iPhone (Safari)</div>
-          <div style="font-size:13px;color:#4a5a54;line-height:1.55">Toque no botão <b>Compartilhar</b> (quadrado com seta) e depois em <b>“Adicionar à Tela de Início”</b>.</div>
-        </div>
-        <div style="font-size:12.5px;color:#6b7a74;background:#f3f6f5;border-radius:12px;padding:12px 14px;line-height:1.5">Depois de instalado, o app abre direto pelo ícone na tela inicial — sem digitar endereço e funcionando como aplicativo.</div>
-      </div>
-    </div>
-  </div>
+[[redirects]]
+  from = "/painel"
+  to = "/SBS Painel Gerencial.html"
+  status = 200
 
-  <script>
-  (function(){
-    if("serviceWorker" in navigator){ try{ navigator.serviceWorker.register("sw.js").catch(function(){}); }catch(e){} }
-    var deferred=null;
-    var dismissed=false; try{ dismissed=localStorage.getItem("pwa_dismiss")==="1"; }catch(e){}
-    var standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
-    window.addEventListener("beforeinstallprompt", function(e){
-      e.preventDefault(); deferred=e;
-      if(!dismissed && !standalone) document.getElementById("pwa-banner").style.display="flex";
-    });
-    var inst=document.getElementById("pwa-install");
-    if(inst) inst.addEventListener("click", function(){
-      document.getElementById("pwa-banner").style.display="none";
-      if(deferred){ deferred.prompt(); deferred.userChoice.finally(function(){ deferred=null; }); }
-    });
-    var cl=document.getElementById("pwa-close");
-    if(cl) cl.addEventListener("click", function(){ document.getElementById("pwa-banner").style.display="none"; try{ localStorage.setItem("pwa_dismiss","1"); }catch(e){} });
-    // iOS (sem beforeinstallprompt)
-    var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-    if(isIOS && !standalone && !dismissed){ document.getElementById("pwa-ios").style.display="block"; }
-    var ix=document.getElementById("pwa-ios-x");
-    if(ix) ix.addEventListener("click", function(){ document.getElementById("pwa-ios").style.display="none"; try{ localStorage.setItem("pwa_dismiss","1"); }catch(e){} });
+[[redirects]]
+  from = "/ti"
+  to = "/SBS Painel T.I.html"
+  status = 200
 
-    // Seção de download — um botão por app
-    var dlModal=document.getElementById("dl-modal");
-    function openModal(){ if(dlModal) dlModal.style.display="flex"; }
-    function closeModal(){ if(dlModal) dlModal.style.display="none"; }
-    Array.prototype.forEach.call(document.querySelectorAll("[data-dl]"), function(btn){
-      btn.addEventListener("click", function(){
-        var page=btn.getAttribute("data-dl");
-        if(deferred){
-          deferred.prompt();
-          deferred.userChoice.finally(function(){ deferred=null; location.href=page; });
-        } else if(standalone){
-          location.href=page;
-        } else {
-          // sem prompt nativo (ex.: iPhone) → abre o app e mostra como instalar
-          openModal();
-          setTimeout(function(){ location.href=page; }, 2600);
-        }
-      });
-    });
-    Array.prototype.forEach.call(document.querySelectorAll("[data-help]"), function(btn){
-      btn.addEventListener("click", openModal);
-    });
-    var dlx=document.getElementById("dl-modal-x");
-    if(dlx) dlx.addEventListener("click", closeModal);
-    if(dlModal) dlModal.addEventListener("click", function(e){ if(e.target===dlModal) closeModal(); });
-  })();
-  </script>
-  <script>
-    /* marcador de versão do hub — atualize a cada publicação */
-    window.SBS_VERSION = "1.4.0 · 28/06/2026";
-    (function(){ var t=document.getElementById("ver-tag"); if(t) t.textContent="v"+window.SBS_VERSION; })();
-  </script>
-</body>
-</html>
+[[redirects]]
+  from = "/ceo"
+  to = "/SBS Painel CEO.html"
+  status = 200
+
+[[redirects]]
+  from = "/atendimento"
+  to = "/SBS Painel Atendimento.html"
+  status = 200
+
+[[redirects]]
+  from = "/marketing"
+  to = "/SBS Painel Marketing.html"
+  status = 200
+
+[[redirects]]
+  from = "/pd"
+  to = "/SBS Painel PD.html"
+  status = 200
+
+[[redirects]]
+  from = "/rh"
+  to = "/SBS Painel RH.html"
+  status = 200
+
+[[redirects]]
+  from = "/colaborador"
+  to = "/SBS Portal do Colaborador.html"
+  status = 200
+
+[[redirects]]
+  from = "/mercado"
+  to = "/SBS Painel Inteligencia Mercado.html"
+  status = 200
+
+# cabeçalhos de segurança básicos
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

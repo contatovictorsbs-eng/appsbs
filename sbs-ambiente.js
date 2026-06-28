@@ -134,8 +134,8 @@
       var E = window.SBS_ENV;
       var hml = E.isHomolog;
 
-      // pill recolhido (só uma bolinha) — estado guardado por aparelho
-      var collapsed=false; try{ collapsed = localStorage.getItem("sbs_env_pill")==="min"; }catch(e){}
+      // pill recolhido (só uma bolinha) — começa recolhido p/ não cobrir o menu
+      var collapsed=true; try{ if(localStorage.getItem("sbs_env_pill2")==="open") collapsed=false; }catch(e){}
 
       var pill = document.createElement("div");
       pill.id = "sbs-env-switch";
@@ -155,16 +155,16 @@
       document.body.appendChild(pill);
       document.body.appendChild(dot);
 
-      function setCollapsed(v){
+      function setCollapsed(v, persist){
         collapsed=v;
         pill.style.display = v ? "none" : "flex";
         dot.style.display  = v ? "flex" : "none";
-        try{ localStorage.setItem("sbs_env_pill", v?"min":"open"); }catch(e){}
+        if(persist){ try{ localStorage.setItem("sbs_env_pill2", v?"min":"open"); }catch(e){} }
       }
-      setCollapsed(collapsed);
+      setCollapsed(collapsed, false);
 
-      pill.querySelector(".se-min").onclick = function(){ setCollapsed(true); };
-      dot.onclick = function(){ setCollapsed(false); };
+      pill.querySelector(".se-min").onclick = function(){ setCollapsed(true, true); };
+      dot.onclick = function(){ setCollapsed(false, true); };
 
       pill.querySelector(".se-go").onclick = function(){
         if(hml){
