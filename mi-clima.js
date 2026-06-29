@@ -1,266 +1,145 @@
-/* ===========================================================
-   SBS Inteligência de Mercado — CLIMA & SAFRA (ao vivo)
-   Previsão por praça agrícola via Open-Meteo (grátis, sem chave,
-   CORS liberado, direto do navegador). Alimenta o motor de alertas
-   e os estudos com sinais de seca / excesso de chuva por região.
-   =========================================================== */
-window.MI_CLIMA = (function(){
-  var API = "https://api.open-meteo.com/v1/forecast";
-  var LS = "sbs_mi_clima_cache";
-  var CACHE = (function(){ try{ return JSON.parse(localStorage.getItem(LS)||"null"); }catch(e){ return null; } })();
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SBS — Guia de Homologação & Migração</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<template id="__bundler_thumbnail" data-bg-color="#0B6B61">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#0B6B61"/>
+    <path d="M380 400 h440 M600 200 v400" stroke="#fff" stroke-width="34" stroke-linecap="round"/>
+    <circle cx="600" cy="400" r="120" fill="none" stroke="#6FA331" stroke-width="34"/>
+  </svg>
+</template>
+<style>
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:"Plus Jakarta Sans",system-ui,sans-serif; color:#16201a; background:#eef3f1;
+    line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .page{ max-width:820px; margin:0 auto; background:#fff; padding:64px 68px 80px; min-height:100vh;
+    box-shadow:0 1px 40px rgba(0,0,0,.06); }
+  .brand{ display:flex; align-items:center; gap:14px; border-bottom:3px solid #0B6B61; padding-bottom:22px; margin-bottom:34px; }
+  .brand .mk{ width:46px; height:46px; border-radius:12px; background:#0B6B61; display:grid; place-items:center; color:#fff; font-weight:800; flex:none; }
+  .brand h1{ font-size:23px; font-weight:800; letter-spacing:-.01em; }
+  .brand p{ font-size:13px; color:#6b7a74; font-weight:600; }
+  h2{ font-size:18px; font-weight:800; color:#0B6B61; margin:38px 0 6px; }
+  h2 .n{ display:inline-grid; place-items:center; width:26px; height:26px; border-radius:8px; background:#0B6B61; color:#fff; font-size:13px; margin-right:10px; vertical-align:2px; }
+  h3{ font-size:14.5px; font-weight:800; margin:20px 0 4px; color:#16201a; }
+  p, li{ font-size:14px; color:#384640; }
+  ul,ol{ margin:8px 0 8px 22px; }
+  li{ margin:4px 0; }
+  .lead{ font-size:15px; color:#4a5a54; margin-bottom:8px; }
+  .tag{ display:inline-block; font-size:11px; font-weight:800; letter-spacing:.5px; padding:3px 9px; border-radius:6px; vertical-align:2px; }
+  .tag.h{ background:#fbe7cf; color:#9a6312; }
+  .tag.p{ background:#dff0d2; color:#3f6321; }
+  .box{ border:1.5px solid #e1e8e5; border-radius:14px; padding:16px 18px; margin:14px 0; background:#fbfdfc; }
+  .box.warn{ border-color:#f0d9a8; background:#fdf7ea; }
+  .box.warn b{ color:#9a6312; }
+  .box h4{ font-size:13px; font-weight:800; margin-bottom:6px; text-transform:uppercase; letter-spacing:.4px; color:#0B6B61; }
+  code{ background:#eef2f0; padding:2px 7px; border-radius:6px; font-family:ui-monospace,Menlo,monospace; font-size:12.5px; color:#0B6B61; }
+  .steps{ counter-reset:s; list-style:none; margin-left:0; }
+  .steps li{ position:relative; padding-left:38px; margin:10px 0; }
+  .steps li::before{ counter-increment:s; content:counter(s); position:absolute; left:0; top:1px; width:24px; height:24px;
+    background:#6FA331; color:#fff; border-radius:50%; display:grid; place-items:center; font-size:12px; font-weight:800; }
+  .chk{ list-style:none; margin-left:0; }
+  .chk li{ position:relative; padding-left:28px; margin:6px 0; }
+  .chk li::before{ content:"☐"; position:absolute; left:0; top:-1px; font-size:16px; color:#0B6B61; }
+  .flow{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:14px 0; }
+  .flow .st{ background:#0B6B61; color:#fff; font-weight:700; font-size:12.5px; padding:8px 14px; border-radius:9px; }
+  .flow .ar{ color:#9bb0a8; font-weight:800; }
+  .flow .st.alt{ background:#b9791e; }
+  .foot{ margin-top:46px; border-top:1px solid #e6ebe9; padding-top:16px; font-size:12px; color:#8a9893; }
+  @media print{ body{ background:#fff; } .page{ box-shadow:none; padding:0; max-width:none; } }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="brand">
+      <div class="mk">SBS</div>
+      <div>
+        <h1>Homologação &amp; Migração Segura</h1>
+        <p>Como testar mudanças antes do deploy · SaaS SBS Green Seeds</p>
+      </div>
+    </div>
 
-  /* ---- mapeamento de código WMO → ícone/rótulo ---- */
-  function wmo(code){
-    code=+code;
-    if(code===0) return { i:"sun", l:"Céu limpo" };
-    if(code<=2) return { i:"cloud-sun", l:"Parcialmente nublado" };
-    if(code===3) return { i:"cloud", l:"Nublado" };
-    if(code===45||code===48) return { i:"cloud-fog", l:"Névoa" };
-    if(code>=51&&code<=57) return { i:"cloud-drizzle", l:"Garoa" };
-    if(code>=61&&code<=67) return { i:"cloud-rain", l:"Chuva" };
-    if(code>=71&&code<=77) return { i:"cloud-snow", l:"Neve" };
-    if(code>=80&&code<=82) return { i:"cloud-rain", l:"Pancadas de chuva" };
-    if(code>=95) return { i:"cloud-lightning", l:"Tempestade" };
-    return { i:"cloud", l:"—" };
-  }
-  var DIAS=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+    <p class="lead">Este guia explica o <b>ambiente de homologação</b> (um sandbox para validar mudanças antes de publicar em produção) e o <b>plano de migração</b> das melhorias de base do sistema: login seguro (Auth), regras de segurança no banco (RLS) e gravação por linha.</p>
 
-  function pracas(){
-    var c = window.SBSStore ? (window.SBSStore.getCol("mi_clima")||[]) : [];
-    return c;
-  }
+    <h2><span class="n">1</span>O que é a Homologação</h2>
+    <p>É o <b>mesmo sistema</b>, rodando com <b>dados separados</b> dos reais. Quem testa pode criar pedidos, demandas, comunicados, etc. — e <b>nada</b> disso aparece na produção. Usa o mesmo banco (Supabase), sem custo de infraestrutura novo: os dados de teste ficam isolados por um prefixo próprio.</p>
+    <div class="flow">
+      <span class="st">Produção <span class="tag p">real</span></span>
+      <span class="ar">│</span>
+      <span class="st alt">Homologação <span class="tag h">teste</span></span>
+      <span class="ar">→</span>
+      <span style="font-size:13px;color:#6b7a74">dados nunca se misturam</span>
+    </div>
 
-  /* limites de chuva acumulada (7 dias) p/ classificar risco */
-  function cfg(){
-    var c = window.SBSStore ? (window.SBSStore.getCol("mi_clima_cfg")||[]) : [];
-    var o = c[0]||{};
-    return { seca: o.seca!=null?+o.seca:10, excesso: o.excesso!=null?+o.excesso:120 };
-  }
-  function setCfg(seca,excesso){ if(window.SBSStore) window.SBSStore.setCol("mi_clima_cfg",[{id:"cfg",seca:+seca||10,excesso:+excesso||120}]); }
+    <h2><span class="n">2</span>Como entrar e sair</h2>
+    <p>Em <b>qualquer painel</b> há um seletor de ambiente flutuante no <b>canto inferior esquerdo</b> — fácil de testar e trocar sem sair da tela:</p>
+    <ul>
+      <li><b>Testar (homologação)</b> — confirma e passa a navegar no sandbox. Aparece uma <b>faixa laranja “HOMOLOGAÇÃO”</b> no topo de todas as telas.</li>
+      <li><b>Voltar à Produção</b> — sai do sandbox e volta ao ambiente real.</li>
+      <li>O seletor pode ser recolhido (botão <b>–</b>) virando uma bolinha; clique nela para abrir de novo. A escolha do ambiente vale para todos os painéis no mesmo aparelho.</li>
+    </ul>
+    <div class="box">
+      <h4>Outras formas de entrar</h4>
+      <p style="margin:0">Adicionar <code>?env=homolog</code> no fim do endereço, ou publicar uma cópia em um endereço de teste do Netlify (branch <code>homolog</code> ou <i>deploy preview</i>) — o sistema detecta sozinho e entra em homologação.</p>
+    </div>
+    <div class="box warn">
+      <b>Importante:</b> a escolha vale para o aparelho/navegador atual. Cada testador entra na homologação no seu próprio dispositivo. A faixa laranja é o sinal de que você <b>não</b> está mexendo em dados reais.
+    </div>
 
-  function risco(rain7){
-    var k=cfg();
-    if(rain7<=k.seca) return { id:"seca", l:"Chuva baixa", c:"#C0710F", bg:"#FBEFE0", i:"sun-dim" };
-    if(rain7>=k.excesso) return { id:"excesso", l:"Excesso de chuva", c:"#2A4A7F", bg:"#E5EDF7", i:"cloud-rain-wind" };
-    return { id:"ok", l:"Chuva adequada", c:"#0B8A5E", bg:"#E4F5EC", i:"check-circle-2" };
-  }
+    <h2><span class="n">3</span>Fluxo de trabalho até o deploy</h2>
+    <ol class="steps">
+      <li><b>Desenvolver</b> a mudança (feito aqui no projeto).</li>
+      <li><b>Publicar em homologação</b> — subir os arquivos numa cópia/branch de teste do Netlify (ou usar o seletor “Testar (homologação)” em qualquer painel sobre a versão atual).</li>
+      <li><b>Validar</b> — os envolvidos testam usando o checklist da seção 4.</li>
+      <li><b>Aprovar</b> — registrar OK de cada área no Painel de T.I. (GMud / Demandas).</li>
+      <li><b>Deploy em produção</b> — só então subir no GitHub (Netlify republica sozinho).</li>
+    </ol>
 
-  async function fetchOne(p){
-    var url=API+"?latitude="+p.lat+"&longitude="+p.lon+
-      "&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m"+
-      "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max"+
-      "&timezone=auto&forecast_days=7";
-    var r = await fetch(url,{cache:"no-store"});
-    if(!r.ok) throw new Error("HTTP "+r.status);
-    var j = await r.json();
-    var d=j.daily||{}, cur=j.current||{};
-    var rain7=(d.precipitation_sum||[]).reduce(function(a,b){ return a+(+b||0); },0);
-    var dias=(d.time||[]).map(function(t,i){
-      var dt=new Date(t+"T12:00:00");
-      return { dia:DIAS[dt.getDay()], data:t, max:Math.round(d.temperature_2m_max[i]), min:Math.round(d.temperature_2m_min[i]),
-        chuva:+(d.precipitation_sum[i]||0), prob:d.precipitation_probability_max?d.precipitation_probability_max[i]:null, wmo:d.weather_code[i] };
-    });
-    return { id:p.id, nome:p.nome, uf:p.uf, cultura:p.cultura, lat:p.lat, lon:p.lon,
-      temp:Math.round(cur.temperature_2m), umid:Math.round(cur.relative_humidity_2m), vento:Math.round(cur.wind_speed_10m),
-      wmo:cur.weather_code, rain7:Math.round(rain7), dias:dias, ts:Date.now() };
-  }
+    <h2><span class="n">4</span>Checklist de validação</h2>
+    <p>Antes de aprovar uma mudança, confira em homologação:</p>
+    <h3>Geral</h3>
+    <ul class="chk">
+      <li>A faixa “HOMOLOGAÇÃO” aparece no topo.</li>
+      <li>Login de cada perfil funciona e abre só o que deve.</li>
+      <li>O que eu crio/edito salva e aparece em outro aparelho (tempo real).</li>
+      <li>Nenhum dado de teste aparece na produção (conferir saindo do sandbox).</li>
+    </ul>
+    <h3>Da mudança específica</h3>
+    <ul class="chk">
+      <li>A nova função faz o que foi pedido, com dados realistas.</li>
+      <li>Não quebrou nada nas telas vizinhas.</li>
+      <li>Erros aparecem no Painel de T.I. → <b>Erros &amp; Diagnóstico</b> (nenhum erro novo inesperado).</li>
+      <li>A Central de Ajuda (?) descreve a função corretamente.</li>
+    </ul>
 
-  async function fetchAll(){
-    var ps=pracas(); if(!ps.length){ CACHE={ list:[], ts:Date.now() }; return CACHE; }
-    var out=[];
-    for(var i=0;i<ps.length;i++){
-      try{ out.push(await fetchOne(ps[i])); }
-      catch(e){ out.push({ id:ps[i].id, nome:ps[i].nome, uf:ps[i].uf, cultura:ps[i].cultura, err:true }); }
-    }
-    CACHE={ list:out, ts:Date.now() };
-    try{ localStorage.setItem(LS, JSON.stringify(CACHE)); }catch(e){}
-    return CACHE;
-  }
-  /* dados em cache (para alertas/estudos sem refazer fetch) */
-  function snapshot(){ return CACHE && CACHE.list ? CACHE.list : []; }
+    <h2><span class="n">5</span>Migração de base — Auth + RLS + gravação por linha</h2>
+    <p>São as melhorias de <b>segurança e escala</b> (custo zero, porém sensíveis). Por isso seguem como passos controlados, sempre <b>validados em homologação primeiro</b>.</p>
 
-  function ago(ts){ if(!ts) return ""; var s=Math.floor((Date.now()-ts)/1000); if(s<90) return "agora"; var m=Math.floor(s/60); if(m<60) return "há "+m+" min"; var h=Math.floor(m/60); if(h<24) return "há "+h+"h"; return "há "+Math.floor(h/24)+" d"; }
+    <h3>a) Login seguro (Supabase Auth) <span class="tag h">fase 1</span></h3>
+    <p>Hoje o acesso é controlado no navegador. A migração move a autenticação para o <b>Supabase Auth</b> (usuário/senha real, com papel embutido). Sem isso, as regras do banco (abaixo) bloqueariam tudo.</p>
 
-  /* ---- card de uma praça ---- */
-  function cardHtml(c){
-    if(c.err) return '<div class="cl-card"><div class="cl-h"><div class="cl-loc"><b>'+c.nome+'</b><span>'+(c.uf||'')+' · '+(c.cultura||'')+'</span></div></div><div class="cl-err"><i data-lucide="cloud-off"></i> Clima indisponível</div></div>';
-    var w=wmo(c.wmo), rk=risco(c.rain7);
-    var maxT=Math.max.apply(null,c.dias.map(function(d){return d.max;}));
-    var minT=Math.min.apply(null,c.dias.map(function(d){return d.min;}));
-    var rng=(maxT-minT)||1;
-    var fc=c.dias.map(function(d){
-      var ww=wmo(d.wmo);
-      var top=Math.round((maxT-d.max)/rng*22);
-      var hgt=Math.round((d.max-d.min)/rng*30)+8;
-      return '<div class="cl-day"><div class="cl-day-l">'+d.dia+'</div>'+
-        '<i data-lucide="'+ww.i+'" class="cl-day-i"></i>'+
-        '<div class="cl-bar-wrap"><div class="cl-bar" style="margin-top:'+top+'px;height:'+hgt+'px"></div></div>'+
-        '<div class="cl-day-t"><b>'+d.max+'°</b><span>'+d.min+'°</span></div>'+
-        '<div class="cl-day-r"><i data-lucide="droplet"></i>'+(d.chuva?d.chuva.toFixed(0):'0')+'</div></div>';
-    }).join("");
-    return '<div class="cl-card">'+
-      '<div class="cl-h">'+
-        '<div class="cl-loc"><b>'+c.nome+'</b><span>'+(c.uf||'')+' · '+(c.cultura||'')+'</span></div>'+
-        '<span class="cl-risk" style="color:'+rk.c+';background:'+rk.bg+'"><i data-lucide="'+rk.i+'"></i> '+rk.l+'</span>'+
-      '</div>'+
-      '<div class="cl-now">'+
-        '<i data-lucide="'+w.i+'" class="cl-now-i"></i>'+
-        '<div class="cl-now-t">'+(c.temp!=null?c.temp+'°':'—')+'</div>'+
-        '<div class="cl-now-m"><span><i data-lucide="droplets"></i> '+(c.umid!=null?c.umid+'%':'—')+'</span>'+
-          '<span><i data-lucide="wind"></i> '+(c.vento!=null?c.vento+' km/h':'—')+'</span>'+
-          '<span><i data-lucide="cloud-rain"></i> '+c.rain7+' mm/7d</span></div>'+
-      '</div>'+
-      '<div class="cl-fc">'+fc+'</div>'+
-    '</div>';
-  }
+    <h3>b) Regras de segurança no banco (RLS) <span class="tag h">fase 1</span></h3>
+    <p>O arquivo <code>db/rls-policies.sql</code> liga o <b>Row Level Security</b> da tabela <code>sbs_kv</code>: só usuário autenticado lê/grava, e apenas T.I./admin remove. Rodar <b>primeiro no Supabase de homologação</b>; replicar em produção só após validar.</p>
+    <div class="box warn">
+      <b>Por que com cuidado:</b> ligar RLS sem o login pronto bloqueia o acesso de todos. A ordem correta é: 1) Auth funcionando em homologação → 2) RLS em homologação → 3) validar → 4) produção. Reversão de emergência: <code>alter table public.sbs_kv disable row level security;</code>
+    </div>
 
-  function injectCss(){
-    if(document.getElementById("mi-clima-css")) return;
-    var s=document.createElement("style"); s.id="mi-clima-css";
-    s.textContent=
-      '.cl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}'+
-      '.cl-card{background:var(--card,#fff);border:1px solid var(--line,#e7ebe9);border-radius:16px;padding:16px 18px}'+
-      '.cl-h{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}'+
-      '.cl-loc b{font-size:15px;font-weight:800;color:var(--ink,#16201a);display:block}'+
-      '.cl-loc span{font-size:11.5px;color:var(--muted,#8a948f)}'+
-      '.cl-risk{font-size:11px;font-weight:800;padding:4px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}'+
-      '.cl-risk i{width:13px;height:13px}'+
-      '.cl-now{display:flex;align-items:center;gap:14px;padding:6px 0 14px;border-bottom:1px solid var(--line,#eef1f0);margin-bottom:12px}'+
-      '.cl-now-i{width:40px;height:40px;color:#0B6B61;flex:0 0 auto}'+
-      '.cl-now-t{font-size:34px;font-weight:800;color:var(--ink,#16201a);line-height:1}'+
-      '.cl-now-m{display:flex;flex-direction:column;gap:3px;margin-left:auto}'+
-      '.cl-now-m span{font-size:11.5px;color:var(--ink-2,#46514c);display:flex;align-items:center;gap:5px;font-weight:600}'+
-      '.cl-now-m i{width:13px;height:13px;color:#69a;flex:0 0 auto}'+
-      '.cl-fc{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}'+
-      '.cl-day{text-align:center}'+
-      '.cl-day-l{font-size:10.5px;font-weight:800;color:var(--muted,#8a948f);text-transform:uppercase}'+
-      '.cl-day-i{width:17px;height:17px;color:#0B6B61;margin:4px auto 2px}'+
-      '.cl-bar-wrap{height:42px;display:flex;justify-content:center}'+
-      '.cl-bar{width:6px;border-radius:6px;background:linear-gradient(#E8A33D,#0B8A5E)}'+
-      '.cl-day-t{font-size:11px;margin-top:3px}.cl-day-t b{font-weight:800;color:var(--ink,#16201a)}.cl-day-t span{color:var(--muted,#8a948f);margin-left:2px}'+
-      '.cl-day-r{font-size:9.5px;color:#3b7fb0;font-weight:700;display:flex;align-items:center;justify-content:center;gap:2px;margin-top:2px}'+
-      '.cl-day-r i{width:9px;height:9px}'+
-      '.cl-err{font-size:13px;color:var(--muted,#8a948f);display:flex;align-items:center;gap:8px;padding:14px 0}.cl-err i{width:18px;height:18px}'+
-      '.cl-load{font-size:13px;color:var(--muted,#8a948f);display:flex;align-items:center;gap:8px;padding:8px 2px}';
-    document.head.appendChild(s);
-  }
+    <h3>c) Gravação por linha (anti-conflito) <span class="tag h">fase 2</span></h3>
+    <p>Hoje cada alteração regrava a coleção <b>inteira</b> — duas pessoas editando ao mesmo tempo podem sobrescrever uma à outra. A fase 2 troca para <b>gravar só o registro alterado</b>, eliminando essa perda silenciosa. Já preparada para ser ativada e testada em homologação sem afetar a produção.</p>
 
-  /* =================== MÓDULO =================== */
-  function register(){
-    if(!window.MI) return;
-    var M=MI.Modules, S=MI.S, esc=MI.esc;
-    M.clima = {
-      label:"Clima & Safra",
-      render(){
-        var ps=pracas();
-        return ''+
-        '<div class="mc-toolbar"><div class="mc-sub">'+ps.length+' praça(s) agrícola(s) · previsão de 7 dias ao vivo</div>'+
-          '<div style="display:flex;gap:8px"><button class="mc-btn ghost" id="cl-cfg"><i data-lucide="sliders-horizontal"></i> Limites de risco</button><button class="mc-btn primary" id="cl-new"><i data-lucide="plus"></i> Nova praça</button></div></div>'+
-        (ps.length? '<div id="cl-grid" class="cl-grid"></div>' :
-          '<div class="mc-empty big"><i data-lucide="cloud-sun"></i><div>Nenhuma praça cadastrada.</div><button class="mc-btn primary" id="cl-new2"><i data-lucide="plus"></i> Adicionar praça agrícola</button></div>')+
-        '<div class="mc-note"><i data-lucide="satellite"></i> Clima ao vivo do Open-Meteo (gratuito, sem chave). Os sinais de <b>chuva baixa</b> e <b>excesso de chuva</b> alimentam automaticamente o motor de Alertas e podem entrar nos Estudos.</div>';
-      },
-      mount(c){
-        injectCss();
-        var nb=c.querySelector("#cl-new")||c.querySelector("#cl-new2"); if(nb) nb.addEventListener("click",function(){ formPraca(); });
-        var cf=c.querySelector("#cl-cfg"); if(cf) cf.addEventListener("click",cfgRisco);
-        var grid=c.querySelector("#cl-grid");
-        if(grid){
-          if(CACHE&&CACHE.list&&CACHE.list.length){ grid.innerHTML=CACHE.list.map(cardHtml).join(""); window.lucide&&lucide.createIcons(); }
-          else grid.innerHTML='<div class="cl-load"><span class="mi-live-dot"></span> Carregando clima das praças…</div>';
-          fetchAll().then(function(p){ if(!document.body.contains(grid)) return; grid.innerHTML=(p.list||[]).map(cardHtml).join(""); window.lucide&&lucide.createIcons();
-            window.MI_ALERTAS && MI_ALERTAS.run && MI_ALERTAS.run(); });
-        }
-      }
-    };
+    <h2><span class="n">6</span>Resumo dos ganhos já no ar (custo zero)</h2>
+    <ul>
+      <li><b>Telemetria de erros</b> em todas as plataformas + visor <b>Erros &amp; Diagnóstico</b> no T.I.</li>
+      <li><b>Coalescência de gravações</b> na nuvem — menos requisições, mais eficiência.</li>
+      <li><b>Ambiente de homologação</b> isolado para validar antes de publicar.</li>
+    </ul>
 
-    function loadLeaflet(cb){
-      if(window.L){ cb(); return; }
-      if(!document.getElementById("leaflet-css")){ var css=document.createElement("link"); css.id="leaflet-css"; css.rel="stylesheet"; css.href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"; document.head.appendChild(css); }
-      var js=document.createElement("script"); js.src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"; js.onload=cb; js.onerror=function(){ MI.toast("Não consegui carregar o mapa"); }; document.head.appendChild(js);
-    }
-    function formPraca(ed){
-      ed=ed||{};
-      MI.modal(ed.id?"Editar praça":"Nova praça agrícola",
-        '<div class="fld"><label>Cidade / praça</label><input id="pf-nome" value="'+esc(ed.nome||'')+'" placeholder="Ex.: Sorriso"></div>'+
-        '<div class="fld-row"><div class="fld"><label>UF</label><input id="pf-uf" value="'+esc(ed.uf||'')+'" placeholder="MT"></div>'+
-          '<div class="fld"><label>Cultura</label><input id="pf-cult" value="'+esc(ed.cultura||'')+'" placeholder="Soja / Milho"></div></div>'+
-        '<div class="fld"><label>Localização no mapa</label>'+
-          '<div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap">'+
-            '<button type="button" class="mc-btn ghost" id="pf-geo"><i data-lucide="locate-fixed"></i> Usar minha localização</button>'+
-          '</div>'+
-          '<div id="pf-map" style="height:240px;border-radius:12px;overflow:hidden;border:1px solid var(--line,#e0e5e2);background:#eef2f0"></div>'+
-          '<p style="font-size:11.5px;color:var(--muted);margin:6px 0 0">Toque no mapa para posicionar o pino — ou use sua localização. O pino também pode ser arrastado.</p>'+
-        '</div>'+
-        '<div class="fld-row"><div class="fld"><label>Latitude</label><input id="pf-lat" type="number" step="0.0001" value="'+(ed.lat!=null?ed.lat:'')+'" placeholder="-12.5450"></div>'+
-          '<div class="fld"><label>Longitude</label><input id="pf-lon" type="number" step="0.0001" value="'+(ed.lon!=null?ed.lon:'')+'" placeholder="-55.7110"></div></div>',
-        (ed.id?'<button class="mc-btn ghost danger" id="pf-del">Remover</button>':'')+'<button class="mc-btn ghost" id="pf-cancel">Cancelar</button><button class="mc-btn primary" id="pf-save"><i data-lucide="save"></i> Salvar</button>');
-      document.getElementById("pf-cancel").addEventListener("click",MI.closeModal);
-      var del=document.getElementById("pf-del"); if(del) del.addEventListener("click",function(){ S.remove("mi_clima",ed.id); MI.toast("Praça removida"); MI.closeModal(); CACHE=null; MI.refresh(); });
-
-      // ---- mapa interativo (Leaflet / OpenStreetMap) ----
-      var map=null, marker=null;
-      function setLatLon(la,lo){ var a=document.getElementById("pf-lat"), b=document.getElementById("pf-lon"); if(a) a.value=(+la).toFixed(5); if(b) b.value=(+lo).toFixed(5); }
-      function placeMarker(la,lo){
-        if(!map||!window.L) return;
-        if(marker){ marker.setLatLng([la,lo]); }
-        else { marker=L.marker([la,lo],{draggable:true}).addTo(map); marker.on("dragend",function(){ var p=marker.getLatLng(); setLatLon(p.lat,p.lng); reverseGeo(p.lat,p.lng); }); }
-      }
-      function reverseGeo(la,lo){
-        try{
-          fetch("https://nominatim.openstreetmap.org/reverse?format=json&zoom=10&accept-language=pt-BR&lat="+la+"&lon="+lo)
-            .then(function(r){ return r.json(); })
-            .then(function(j){ var a=(j&&j.address)||{}; var cid=a.city||a.town||a.village||a.municipality||a.county||""; var nm=document.getElementById("pf-nome"); if(nm&&!nm.value.trim()&&cid) nm.value=cid; })
-            .catch(function(){});
-        }catch(e){}
-      }
-      loadLeaflet(function(){
-        if(!document.getElementById("pf-map")) return;
-        var sLat=ed.lat!=null?ed.lat:-15.78, sLon=ed.lon!=null?ed.lon:-47.93, sZoom=ed.lat!=null?10:4;
-        map=L.map("pf-map").setView([sLat,sLon],sZoom);
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map);
-        if(ed.lat!=null) placeMarker(ed.lat,ed.lon);
-        map.on("click",function(e){ placeMarker(e.latlng.lat,e.latlng.lng); setLatLon(e.latlng.lat,e.latlng.lng); reverseGeo(e.latlng.lat,e.latlng.lng); });
-        setTimeout(function(){ try{ map.invalidateSize(); }catch(e){} },220);
-      });
-      var geoBtn=document.getElementById("pf-geo");
-      if(geoBtn) geoBtn.addEventListener("click",function(){
-        if(!navigator.geolocation){ MI.toast("Localização não disponível neste aparelho"); return; }
-        MI.toast("Buscando sua localização…");
-        navigator.geolocation.getCurrentPosition(function(pos){
-          var la=pos.coords.latitude, lo=pos.coords.longitude;
-          setLatLon(la,lo);
-          if(map){ map.setView([la,lo],13); placeMarker(la,lo); }
-          reverseGeo(la,lo);
-          MI.toast("Localização marcada");
-        }, function(){ MI.toast("Não consegui pegar a localização (permita o acesso no navegador)."); }, {enableHighAccuracy:true,timeout:9000,maximumAge:0});
-      });
-
-      document.getElementById("pf-save").addEventListener("click",function(){
-        var v=function(id){ var e=document.getElementById(id); return e?e.value.trim():""; };
-        var nome=v("pf-nome"), lat=parseFloat(v("pf-lat")), lon=parseFloat(v("pf-lon"));
-        if(!nome){ MI.toast("Informe a cidade"); return; }
-        if(isNaN(lat)||isNaN(lon)){ MI.toast("Marque o ponto no mapa ou use sua localização"); return; }
-        var data={ nome:nome, uf:v("pf-uf"), cultura:v("pf-cult"), lat:lat, lon:lon };
-        if(ed.id) S.update("mi_clima",ed.id,data); else S.add("mi_clima",Object.assign({id:"cl"+Date.now()},data));
-        MI.toast("Praça salva"); MI.closeModal(); CACHE=null; MI.refresh();
-      });
-    }
-    function cfgRisco(){
-      var k=cfg();
-      MI.modal("Limites de risco de chuva",
-        '<p style="font-size:12.5px;color:var(--muted);margin:0 0 14px;line-height:1.5">Definem quando o painel sinaliza risco com base na <b>chuva acumulada dos próximos 7 dias</b> por praça.</p>'+
-        '<div class="fld-row"><div class="fld"><label>Chuva baixa se ≤ (mm/7d)</label><input id="rk-seca" type="number" value="'+k.seca+'"></div>'+
-          '<div class="fld"><label>Excesso se ≥ (mm/7d)</label><input id="rk-exc" type="number" value="'+k.excesso+'"></div></div>',
-        '<button class="mc-btn ghost" id="rk-cancel">Cancelar</button><button class="mc-btn primary" id="rk-save"><i data-lucide="save"></i> Salvar</button>');
-      document.getElementById("rk-cancel").addEventListener("click",MI.closeModal);
-      document.getElementById("rk-save").addEventListener("click",function(){
-        setCfg(document.getElementById("rk-seca").value, document.getElementById("rk-exc").value);
-        MI.toast("Limites atualizados"); MI.closeModal(); MI.refresh();
-      });
-    }
-  }
-
-  return { pracas:pracas, fetchAll:fetchAll, snapshot:snapshot, risco:risco, wmo:wmo, cfg:cfg, register:register, cardHtml:cardHtml };
-})();
-if(window.MI && window.MI_CLIMA) MI_CLIMA.register();
+    <div class="foot">SBS Green Seeds · documento interno de engenharia · seguir a ordem de fases evita indisponibilidade do sistema em produção.</div>
+  </div>
+</body>
+</html>

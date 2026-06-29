@@ -20,10 +20,15 @@
     if(window.claude && window.claude.complete){
       try{ var r=await window.claude.complete(prompt); if(r) return r; }catch(e){}
     }
-    var resp=await fetch("/.netlify/functions/assistente",{ method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({prompt:prompt}) });
-    if(!resp.ok) throw new Error("http "+resp.status);
-    var j=await resp.json();
-    return j.text||j.completion||j.error||"";
+    var resp;
+    try{
+      resp=await fetch("/.netlify/functions/assistente",{ method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({prompt:prompt}) });
+    }catch(e){ return "⚠️ Não consegui contatar o servidor da IA. Verifique a conexão."; }
+    if(resp.status===404){ return "⚠️ A função do assistente não foi publicada (erro 404). A T.I. precisa subir a pasta \"functions/\" e o \"netlify.toml\" na raiz do repositório e republicar."; }
+    var j={};
+    try{ j=await resp.json(); }catch(e){ return "⚠️ Resposta inválida do servidor (HTTP "+resp.status+")."; }
+    if(!resp.ok && !j.text){ return "⚠️ Erro do servidor (HTTP "+resp.status+"): "+(j.error||"sem detalhe")+"."; }
+    return j.text||j.completion||j.error||"Não consegui gerar uma resposta agora.";
   }
 
   /* funcionalidades do painel (da Central de Ajuda) — para responder ‘como faço X’ */
